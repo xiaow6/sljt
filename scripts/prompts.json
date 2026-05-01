@@ -1,0 +1,36 @@
+{
+  "style_base": "Dark sci-fi card game illustration, cold cyan and teal palette with crimson accents, painterly digital concept art with sharp rim lighting, ancient alien biotech aesthetic mixed with sleek human technology, volumetric fog, high contrast, square 1:1 composition, no text, no UI, no borders, inspired by Dead Space and Slay the Spire concept art",
+  "cards": [
+    { "id": "laser_shot", "name": "激光射击", "prompt": "a futuristic handheld laser cannon firing a piercing cyan beam through dark space, sparks and lens flare" },
+    { "id": "energy_shield", "name": "能量护盾", "prompt": "a glowing hexagonal energy shield deflecting alien projectiles, cyan plasma barrier in front of an astronaut" },
+    { "id": "tactical_retreat", "name": "战术撤离", "prompt": "an astronaut activating a personal force field while sprinting backward through a starship corridor, motion blur" },
+    { "id": "emergency_repair", "name": "应急维修", "prompt": "gloved hands fixing a sparking circuit board inside a powered exosuit, blood and oil mixing on the metal floor" },
+    { "id": "med_bay", "name": "医疗舱", "prompt": "a futuristic medical pod with glowing IV tubes, cyan plasma flowing into a soldier's arm, alone in a dim ship interior" },
+    { "id": "blood_fuel", "name": "血液燃料", "prompt": "a centrifuge converting human blood into glowing cyan fuel, cables plugged into a soldier's chest, grim sci-fi" },
+    { "id": "bio_link", "name": "生命链接", "prompt": "translucent biolink cables piercing an astronaut's spine, connecting to a humming weapon core that glows red" },
+    { "id": "reactor_overclock", "name": "反应堆超频", "prompt": "a fusion reactor core spinning at dangerous speeds, cracks forming in containment, blinding plasma light" },
+    { "id": "tactical_ai", "name": "战术 AI", "prompt": "a holographic AI tactical interface projected from a wrist computer, geometric blue lines mapping a battlefield" },
+    { "id": "nano_repair", "name": "纳米修复", "prompt": "swarms of glowing nanobots stitching wounds on a soldier's armor, microscopic cyan light flecks, close up" },
+    { "id": "data_scan", "name": "数据扫描", "prompt": "a holographic scan beam analyzing a colossal alien creature, data points and wireframe overlays in cyan" },
+    { "id": "weakness_analysis", "name": "弱点分析", "prompt": "a targeting reticle highlighting glowing crimson weak points on an ancient alien organism, HUD-like overlay" },
+    { "id": "plasma_strike", "name": "等离子斩", "prompt": "a soldier wielding a plasma blade slicing through alien armor in a single cyan arc, sparks of plasma" },
+    { "id": "orbital_cannon", "name": "轨道炮", "prompt": "a massive orbital cannon firing a colossal piercing energy beam from above through a starship corridor, scorch marks, debris" },
+    { "id": "singularity_bomb", "name": "奇点炸弹", "prompt": "a black hole singularity bomb detonating mid-air, swirling void with cyan accretion disk, wreckage being pulled in" }
+  ],
+  "enemies": [
+    { "id": "spore_swarm", "name": "孢子虫群", "prompt": "a swarm of small bioluminescent alien parasites, mouths full of teeth, drifting in dark space" },
+    { "id": "biomech_drone", "name": "生物机甲", "prompt": "a hovering biomechanical drone, fused organic tissue and obsidian metal, single red eye sensor, dark sci-fi vignette" },
+    { "id": "dormant_sentinel", "name": "休眠哨兵", "prompt": "a four-legged ancient alien sentinel awakening from stasis, dust falling off geometric carapace, glowing crimson core" },
+    { "id": "voidling", "name": "虚空使徒", "prompt": "a robed alien priest with a void where its face should be, cyan runes orbiting its form" },
+    { "id": "evolved", "name": "进化体", "prompt": "an elite mutated alien warrior, towering biomechanical form with extra arms and ancient runic plating, menacing pose" },
+    { "id": "weaver", "name": "织网者 (Boss)", "prompt": "a colossal eldritch alien weaver suspended in a cathedral chamber, six tendrils manipulating threads of time, glowing crimson eyes, terrifying scale" }
+  ],
+  "scenes": [
+    { "id": "battle_corridor", "name": "母舰走廊", "prompt": "a dark interior corridor of an ancient alien mothership, dripping bioluminescent biomech walls, fog and steam, distant red emergency lights, no characters, environment background, wide cinematic composition" },
+    { "id": "map_overview", "name": "母舰总览", "prompt": "exterior view of a colossal ancient alien mothership drifting in deep space, organic biomech architecture meets geometric stone, glowing cyan veins running through it, distant nebula behind, cinematic wide shot, no characters" },
+    { "id": "boss_room", "name": "核心议会", "prompt": "the cathedral-like core chamber of an alien mothership, vast vaulted hall with floating runic monoliths, swirling cyan plasma vortex at center, ominous emptiness, no characters, environment background" }
+  ],
+  "portraits": [
+    { "id": "commander", "name": "指挥官", "prompt": "head and shoulders portrait of a battle-hardened human deep space commander in cyan-trimmed power armor, helmet visor open showing a determined face, holographic HUD reflections in the glass, dramatic rim lighting" }
+  ]
+}

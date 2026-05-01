@@ -1,0 +1,19 @@
+/* Global reset; theme lives in App.css. */
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+}
+#root {
+  width: 100%;
+  margin: 0;
+  border: none;
+}
+body {
+  font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
