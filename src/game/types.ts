@@ -57,6 +57,8 @@ export interface Intent {
   value?: number;
   hits?: number;
   text?: string;
+  // i18n key resolved at render time. Falls back to `text` when absent.
+  textKey?: string;
   // Identifier used by engine to dispatch unique boss mechanics.
   special?: string;
 }

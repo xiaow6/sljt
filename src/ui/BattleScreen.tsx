@@ -4,6 +4,7 @@ import type { CardDef } from "../game/types";
 import { CardView } from "./CardView";
 import { EnemyView } from "./EnemyView";
 import { RelicBar } from "./RelicBar";
+import { useLang, t } from "../i18n";
 
 interface DamageFloater {
   id: number;
@@ -74,6 +75,7 @@ const PLAY_DELAY_MS = 220;
 const EFFECT_LIFETIME_MS = 700;
 
 export function BattleScreen() {
+  useLang();
   const run = useRun();
   const c = run.combat;
   const [selectedCardIdx, setSelectedCardIdx] = useState<number | null>(null);
@@ -396,69 +398,68 @@ export function BattleScreen() {
               ))}
           </div>
           <div className="stat-row">
-            <span className="stat-label">HP</span>
+            <span className="stat-label">{t("stat.hp")}</span>
             <span className="stat-value">
               {player.hp} / {player.maxHp}
             </span>
           </div>
           <div className="stat-row">
-            <span className="stat-label">能量</span>
+            <span className="stat-label">{t("stat.energy")}</span>
             <span className="stat-value energy-pip">
               {player.energy} / {player.maxEnergy}
             </span>
           </div>
-          <div className="stat-row">
-            <span className="stat-label">格挡</span>
+          <div className="stat-row tooltip-host" data-tip={t("kw.block.desc")}>
+            <span className="stat-label">{t("stat.block")}</span>
             <span className="stat-value">{player.block}</span>
           </div>
           {player.armor > 0 && (
-            <div className="stat-row">
-              <span className="stat-label">🛡 护甲</span>
+            <div className="stat-row tooltip-host" data-tip={t("kw.armor.desc")}>
+              <span className="stat-label">🛡 {t("stat.armor")}</span>
               <span className="stat-value armor-value">{player.armor}</span>
             </div>
           )}
-          <div className="stat-row charge-row">
-            <span className="stat-label">⚡充能</span>
+          <div className="stat-row charge-row tooltip-host" data-tip={t("kw.charge.desc")}>
+            <span className="stat-label">⚡{t("stat.charge")}</span>
             <span className="stat-value charge-value">{player.charge}</span>
           </div>
           {player.data > 0 && (
-            <div className="stat-row">
-              <span className="stat-label">⌬ 信息流</span>
+            <div className="stat-row tooltip-host" data-tip={t("kw.data.desc")}>
+              <span className="stat-label">⌬ {t("stat.data")}</span>
               <span className="stat-value data-value">{player.data}</span>
             </div>
           )}
-          {player.doubleNextAttack && <div className="badge">下次攻击 ×2</div>}
+          {player.doubleNextAttack && (
+            <div className="badge">{t("battle.doubleNext")}</div>
+          )}
           {player.vulnerable > 0 && (
-            <div className="badge badge-vuln tooltip-host" data-tip="受到伤害提高 50%。每回合减 1。">
-              易伤 {player.vulnerable}
+            <div className="badge badge-vuln tooltip-host" data-tip={t("kw.vulnerable.desc")}>
+              {t("kw.vulnerable")} {player.vulnerable}
             </div>
           )}
           {player.weak > 0 && (
-            <div className="badge tooltip-host" data-tip="攻击伤害降低 25%。每回合减 1。">
-              虚弱 {player.weak}
+            <div className="badge tooltip-host" data-tip={t("kw.weak.desc")}>
+              {t("kw.weak")} {player.weak}
             </div>
           )}
           {player.blockNextHalf && (
-            <div className="badge">下次伤害减半</div>
+            <div className="badge">{t("battle.halveNext")}</div>
           )}
           {player.bounceFieldActive && (
-            <div className="badge">反弹场就绪</div>
+            <div className="badge">{t("battle.bounceReady")}</div>
           )}
           {player.drones.length > 0 && (
             <div className="drone-bay">
-              {player.drones.map((d, i) => {
-                const meta = DRONE_LABELS[d.kind];
-                return (
-                  <span
-                    key={i}
-                    className={`drone-slot drone-${d.kind} ${d.overclocked ? "drone-overclocked" : ""}`}
-                    title={`${meta.name}无人机 ×${d.stacks}`}
-                  >
-                    {meta.icon}
-                    {d.stacks > 1 && <sup>{d.stacks}</sup>}
-                  </span>
-                );
-              })}
+              {player.drones.map((d, i) => (
+                <span
+                  key={i}
+                  className={`drone-slot drone-${d.kind} ${d.overclocked ? "drone-overclocked" : ""}`}
+                  title={`${droneName(d.kind)} ×${d.stacks}`}
+                >
+                  {DRONE_ICONS[d.kind]}
+                  {d.stacks > 1 && <sup>{d.stacks}</sup>}
+                </span>
+              ))}
             </div>
           )}
           <div ref={powersRowRef} className="powers-row">
@@ -471,13 +472,13 @@ export function BattleScreen() {
         </div>
 
         <div className="hand-area">
-          <div className="pile pile-draw" title={`抽牌堆 ${c.draw.length} 张`}>
+          <div className="pile pile-draw" title={`${t("battle.drawPile")} ${c.draw.length}`}>
             <div className="pile-stack">
               <div className="card-back" />
               <div className="card-back" />
               <div className="card-back" />
             </div>
-            <div className="pile-label">抽牌</div>
+            <div className="pile-label">{t("battle.drawPile")}</div>
             <div className="pile-count">{c.draw.length}</div>
           </div>
           <div className="hand">
@@ -511,20 +512,24 @@ export function BattleScreen() {
               );
             })}
           </div>
-          <div className="pile pile-discard" title={`弃牌堆 ${c.discard.length} 张`}>
+          <div className="pile pile-discard" title={`${t("battle.discardPile")} ${c.discard.length}`}>
             <div className="pile-stack">
               {c.discard.length > 0 && <div className="card-back card-back-discard" />}
               {c.discard.length > 1 && <div className="card-back card-back-discard" />}
               {c.discard.length > 2 && <div className="card-back card-back-discard" />}
             </div>
-            <div className="pile-label">弃牌</div>
+            <div className="pile-label">{t("battle.discardPile")}</div>
             <div className="pile-count">{c.discard.length}</div>
           </div>
         </div>
 
         <div className="battle-controls">
           <div className="pile-info">
-            {c.exhaust.length > 0 && <div>消耗 {c.exhaust.length}</div>}
+            {c.exhaust.length > 0 && (
+              <div>
+                {t("battle.exhaustPile")} {c.exhaust.length}
+              </div>
+            )}
           </div>
           {xCard && (() => {
             const isSingularity = selected?.id === "singularity_bomb";
@@ -537,7 +542,7 @@ export function BattleScreen() {
                   <div
                     className={`x-cost-charge ${chargeOk ? "" : "x-cost-fail"}`}
                   >
-                    需 {chargeNeed} ⚡
+                    {t("battle.needCharge").replace("{n}", String(chargeNeed))}
                   </div>
                 )}
                 <button onClick={() => setXValue(Math.max(0, xValue - 1))}>−</button>
@@ -551,7 +556,7 @@ export function BattleScreen() {
                   disabled={xValue <= 0 || !chargeOk}
                   onClick={() => attemptPlay(null)}
                 >
-                  引爆
+                  {t("battle.detonate")}
                 </button>
               </div>
             );
@@ -568,13 +573,13 @@ export function BattleScreen() {
               }, 360);
             }}
           >
-            结束回合
+            {t("battle.endTurn")}
           </button>
         </div>
       </div>
 
       {selected && targetEnemies && (
-        <div className="targeting-banner">选择目标</div>
+        <div className="targeting-banner">{t("battle.targeting")}</div>
       )}
 
       <EffectLayer effects={effects} />
@@ -641,31 +646,17 @@ function EffectLayer({ effects }: { effects: PlayEffect[] }) {
   );
 }
 
-const POWER_LABELS: Record<string, string> = {
-  reactor_overclock: "反应堆超频",
-  tactical_ai: "战术 AI",
-  nano_repair: "纳米修复",
-  metalize: "金属化",
-  reactive_armor: "反应装甲",
-  charge_absorb: "吸收充能",
-  resonance_barrier: "共振屏障",
-  swarm_protocol: "集群协议",
-  production_line: "量产线",
-  ai_hub: "AI 中枢",
-  swarm_heart: "机群之心",
-  data_flood: "数据洪流",
-  virus_deploy: "病毒部署",
-  nuclear_meltdown: "核熔毁",
-  phoenix_protocol: "凤凰协议",
-};
-
 function powerLabel(id: string) {
-  return POWER_LABELS[id] ?? id;
+  return t(`power.${id}`);
 }
 
-const DRONE_LABELS: Record<string, { name: string; icon: string }> = {
-  combat: { name: "战斗", icon: "⚔" },
-  guardian: { name: "护卫", icon: "🛡" },
-  repair: { name: "修复", icon: "❤" },
-  scout: { name: "侦察", icon: "👁" },
+const DRONE_ICONS: Record<string, string> = {
+  combat: "⚔",
+  guardian: "🛡",
+  repair: "❤",
+  scout: "👁",
 };
+
+function droneName(kind: string) {
+  return t(`drone.${kind}`);
+}

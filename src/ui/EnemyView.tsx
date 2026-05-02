@@ -86,6 +86,11 @@ export function EnemyView({
   );
 }
 
+function intentLabel(it: Intent): string {
+  if (it.textKey) return t(it.textKey);
+  return it.text ?? "";
+}
+
 function intentText(it: Intent, playerVulnerable = 0): string {
   if (it.kind === "attack") {
     const base = it.value ?? 0;
@@ -94,8 +99,8 @@ function intentText(it: Intent, playerVulnerable = 0): string {
     return `⚔ ${dmg}${hits}`;
   }
   if (it.kind === "block") return `🛡 ${it.value}`;
-  if (it.kind === "buff") return `↑ ${it.text ?? "强化"}`;
-  if (it.kind === "debuff") return `↓ ${it.text ?? "削弱"}`;
-  if (it.kind === "special") return `✦ ${it.text ?? "特殊"}`;
+  if (it.kind === "buff") return `↑ ${intentLabel(it) || t("intent.buff")}`;
+  if (it.kind === "debuff") return `↓ ${intentLabel(it) || t("intent.debuff")}`;
+  if (it.kind === "special") return `✦ ${intentLabel(it) || t("intent.special")}`;
   return "?";
 }

@@ -157,6 +157,65 @@ const zh: Record<string, string> = {
 
   // Deck modal
   "deck.title": "当前牌组 · {n} 张",
+
+  // Intents (only buff/debuff/special show text; attack/block use values)
+  "intent.buff": "强化",
+  "intent.debuff": "削弱",
+  "intent.special": "特殊",
+  "intent.charging": "充能中",
+  "intent.voidling.curse": "施加易伤 2",
+  "intent.weaver.rip": "撕裂时间 (易伤 3)",
+  "intent.weaver.rewind": "时空回溯 (弃 2 张 + 虚弱 2)",
+  "intent.queen.spread": "孢子蔓延 (易伤 2)",
+  "intent.warden.crush": "引力压制 (易伤 2)",
+  "intent.warden.compress": "重力压缩 (易伤 2 + 虚弱 2)",
+  "intent.priest.curse": "符文诅咒 (易伤 3)",
+  "intent.timeEater.warp": "时间错乱 (易伤 2)",
+  "intent.council.verdict": "议会判决 (易伤 4)",
+  "intent.council.judgment": "议会判决 (5 × 手牌数 伤害)",
+  "intent.heart.regen": "原初再生 (治疗 20)",
+  "intent.heart.collapse": "时空崩塌 (易伤 3 + 虚弱 3)",
+  "intent.heart.corruption": "源初腐化 (易伤 5)",
+
+  // Relics (label + description)
+  "relic.quantum_battery.name": "量子电池",
+  "relic.quantum_battery.desc": "战斗开始时获得 5 点充能。",
+  "relic.tactical_hud.name": "战术 HUD",
+  "relic.tactical_hud.desc": "战斗开始时额外抽 2 张牌(仅首回合)。",
+  "relic.energy_core.name": "能量核心",
+  "relic.energy_core.desc": "每回合最大能量 +1。",
+  "relic.emergency_medkit.name": "应急医疗包",
+  "relic.emergency_medkit.desc": "每场战斗胜利后治疗 4 HP。",
+  "relic.overload_buffer.name": "过载缓冲",
+  "relic.overload_buffer.desc": "反应堆超频不再失去 HP。",
+
+  // Powers (battle player power badges)
+  "power.reactor_overclock": "反应堆超频",
+  "power.tactical_ai": "战术 AI",
+  "power.nano_repair": "纳米修复",
+  "power.metalize": "金属化",
+  "power.reactive_armor": "反应装甲",
+  "power.charge_absorb": "吸收充能",
+  "power.resonance_barrier": "共振屏障",
+  "power.swarm_protocol": "集群协议",
+  "power.production_line": "量产线",
+  "power.ai_hub": "AI 中枢",
+  "power.swarm_heart": "机群之心",
+  "power.data_flood": "数据洪流",
+  "power.virus_deploy": "病毒部署",
+  "power.nuclear_meltdown": "核熔毁",
+  "power.phoenix_protocol": "凤凰协议",
+
+  // Drone slot labels
+  "drone.combat": "战斗",
+  "drone.guardian": "护卫",
+  "drone.repair": "修复",
+  "drone.scout": "侦察",
+
+  // Battle inline labels
+  "battle.doubleNext": "下次攻击 ×2",
+  "battle.halveNext": "下次伤害减半",
+  "battle.bounceReady": "反弹场就绪",
 };
 
 const en: Record<string, string> = {
@@ -305,6 +364,60 @@ const en: Record<string, string> = {
   "codex.lore": "Field Recovery Notes",
 
   "deck.title": "Current Deck · {n}",
+
+  "intent.buff": "Empower",
+  "intent.debuff": "Weaken",
+  "intent.special": "Special",
+  "intent.charging": "Charging",
+  "intent.voidling.curse": "Curse — apply Vuln 2",
+  "intent.weaver.rip": "Time Rip — Vuln 3",
+  "intent.weaver.rewind": "Time Rewind — discard 2 cards + Weak 2",
+  "intent.queen.spread": "Spore Spread — Vuln 2",
+  "intent.warden.crush": "Gravity Crush — Vuln 2",
+  "intent.warden.compress": "Gravity Compress — Vuln 2 + Weak 2",
+  "intent.priest.curse": "Runic Curse — Vuln 3",
+  "intent.timeEater.warp": "Temporal Warp — Vuln 2",
+  "intent.council.verdict": "Council Verdict — Vuln 4",
+  "intent.council.judgment": "Judgment — 5 × hand-size damage",
+  "intent.heart.regen": "Primal Regen — heal 20",
+  "intent.heart.collapse": "Spacetime Collapse — Vuln 3 + Weak 3",
+  "intent.heart.corruption": "Primal Corruption — Vuln 5",
+
+  "relic.quantum_battery.name": "Quantum Battery",
+  "relic.quantum_battery.desc": "Start each combat with 5 Charge.",
+  "relic.tactical_hud.name": "Tactical HUD",
+  "relic.tactical_hud.desc": "Draw 2 extra cards on the first turn of each combat.",
+  "relic.energy_core.name": "Energy Core",
+  "relic.energy_core.desc": "+1 maximum Energy per turn.",
+  "relic.emergency_medkit.name": "Emergency Medkit",
+  "relic.emergency_medkit.desc": "Heal 4 HP after every combat victory.",
+  "relic.overload_buffer.name": "Overload Buffer",
+  "relic.overload_buffer.desc": "Reactor Overclock no longer costs HP.",
+
+  "power.reactor_overclock": "Reactor Overclock",
+  "power.tactical_ai": "Tactical AI",
+  "power.nano_repair": "Nano Repair",
+  "power.metalize": "Metalize",
+  "power.reactive_armor": "Reactive Armor",
+  "power.charge_absorb": "Charge Absorb",
+  "power.resonance_barrier": "Resonance Barrier",
+  "power.swarm_protocol": "Swarm Protocol",
+  "power.production_line": "Production Line",
+  "power.ai_hub": "AI Hub",
+  "power.swarm_heart": "Swarm Heart",
+  "power.data_flood": "Data Flood",
+  "power.virus_deploy": "Virus Deploy",
+  "power.nuclear_meltdown": "Nuclear Meltdown",
+  "power.phoenix_protocol": "Phoenix Protocol",
+
+  "drone.combat": "Combat",
+  "drone.guardian": "Guardian",
+  "drone.repair": "Repair",
+  "drone.scout": "Scout",
+
+  "battle.doubleNext": "Next attack ×2",
+  "battle.halveNext": "Next hit halved",
+  "battle.bounceReady": "Bounce field ready",
 };
 
 export const STRINGS: Record<Lang, Record<string, string>> = { zh, en };
