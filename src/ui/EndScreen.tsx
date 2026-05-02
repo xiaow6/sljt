@@ -1,5 +1,6 @@
 import { actions, useRun } from "../store";
 import { RELICS } from "../game/relics";
+import { relicName } from "../game/lookup";
 import { t, useLang } from "../i18n";
 
 export function EndScreen() {
@@ -38,10 +39,9 @@ export function EndScreen() {
           <div className="end-relics-list">
             {run.relics.map((id) => {
               const r = RELICS[id];
-              const name = t(`relic.${id}.name`, r?.name);
               return r ? (
                 <span key={id} className="end-relic">
-                  {r.icon} {name}
+                  {r.icon} {relicName(id)}
                 </span>
               ) : null;
             })}

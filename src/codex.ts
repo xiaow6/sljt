@@ -1,6 +1,7 @@
 // Persistent codex unlocks. Survives across runs — separate from the run save.
 const CARDS_KEY = "sljt:codex:cards";
 const ENEMIES_KEY = "sljt:codex:enemies";
+const RELICS_KEY = "sljt:codex:relics";
 
 function read(key: string): Set<string> {
   try {
@@ -41,4 +42,15 @@ export function unlockedCards(): Set<string> {
 
 export function unlockedEnemies(): Set<string> {
   return read(ENEMIES_KEY);
+}
+
+export function unlockRelic(id: string) {
+  const s = read(RELICS_KEY);
+  if (s.has(id)) return;
+  s.add(id);
+  write(RELICS_KEY, s);
+}
+
+export function unlockedRelics(): Set<string> {
+  return read(RELICS_KEY);
 }

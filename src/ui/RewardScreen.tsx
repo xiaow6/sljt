@@ -1,6 +1,7 @@
 import { actions, getPendingRelic, useRun } from "../store";
 import { CardView } from "./CardView";
 import { RELICS } from "../game/relics";
+import { relicName, relicDescription } from "../game/lookup";
 import { t, useLang } from "../i18n";
 
 export function RewardScreen() {
@@ -9,8 +10,8 @@ export function RewardScreen() {
   const cards = run.rewardCards ?? [];
   const relicId = getPendingRelic();
   const relic = relicId ? RELICS[relicId] : null;
-  const relicName = relicId ? t(`relic.${relicId}.name`, relic?.name) : "";
-  const relicDesc = relicId ? t(`relic.${relicId}.desc`, relic?.description) : "";
+  const rname = relicId ? relicName(relicId) : "";
+  const rdesc = relicId ? relicDescription(relicId) : "";
   return (
     <div className="reward-screen">
       <h2>{t("reward.title")}</h2>
@@ -19,9 +20,9 @@ export function RewardScreen() {
           <div className="reward-relic-icon">{relic.icon}</div>
           <div>
             <div className="reward-relic-name">
-              {t("reward.relicLabel")} · {relicName}
+              {t("reward.relicLabel")} · {rname}
             </div>
-            <div className="reward-relic-desc">{relicDesc}</div>
+            <div className="reward-relic-desc">{rdesc}</div>
             <div className="reward-relic-hint">{t("reward.relicHint")}</div>
           </div>
         </div>

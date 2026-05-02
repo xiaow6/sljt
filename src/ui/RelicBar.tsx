@@ -1,6 +1,7 @@
 import { useRun } from "../store";
 import { RELICS } from "../game/relics";
-import { t, useLang } from "../i18n";
+import { relicName, relicDescription } from "../game/lookup";
+import { useLang } from "../i18n";
 
 export function RelicBar() {
   useLang();
@@ -11,8 +12,8 @@ export function RelicBar() {
       {run.relics.map((id) => {
         const r = RELICS[id];
         if (!r) return null;
-        const name = t(`relic.${id}.name`, r.name);
-        const desc = t(`relic.${id}.desc`, r.description);
+        const name = relicName(id);
+        const desc = relicDescription(id);
         return (
           <div key={id} className="relic" title={`${name} — ${desc}`}>
             <span className="relic-icon">{r.icon}</span>

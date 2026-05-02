@@ -76,10 +76,24 @@ export function hasSave(): boolean {
 let state: RunState = newRun();
 let pendingRelic: string | null = null;
 
+// Screens we never persist:
+//   - battle/reward/event: combat/loot/dialog state contains non-serializable
+//     pieces (intent functions etc.) and we resume at map anyway.
+//   - title: user just returned to title — we MUST keep the existing save
+//     intact so the "继续游戏 / Continue" button stays available.
+//   - gameover/victory: run is over; future emits at these screens are stale.
+const NO_SAVE_SCREENS = new Set([
+  "battle",
+  "reward",
+  "event",
+  "title",
+  "gameover",
+  "victory",
+]);
+
 function emit() {
   state = { ...state };
-  // Save on every state change (except mid-combat — see saveState).
-  if (state.screen !== "battle" && state.screen !== "reward" && state.screen !== "event") {
+  if (!NO_SAVE_SCREENS.has(state.screen)) {
     saveState(state);
   }
   for (const l of listeners) l();
