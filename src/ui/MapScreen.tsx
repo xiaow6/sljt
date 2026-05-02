@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { actions, useRun } from "../store";
 import { RelicBar } from "./RelicBar";
 import { DeckModal } from "./DeckModal";
@@ -29,14 +29,16 @@ export function MapScreen() {
   const act = getAct(run.act);
   const wrapRef = useRef<HTMLDivElement>(null);
 
-  // Scroll behavior: entry on a new act → bottom; after each step → keep current
-  // node positioned ~70% down the visible area so past rows recede below.
-  useEffect(() => {
+  // Scroll synchronously after layout. Entry on a new act → instant snap to
+  // bottom (entry row). After each step → smooth scroll keeping current node
+  // at ~65% down the visible area.
+  useLayoutEffect(() => {
     if (!wrapRef.current) return;
     const wrap = wrapRef.current;
     const cur = run.map.find((n) => n.id === run.currentNodeId);
     if (!cur) {
-      wrap.scrollTo({ top: wrap.scrollHeight, behavior: "smooth" });
+      // Entry: snap (no smooth) so the user starts at the bottom immediately.
+      wrap.scrollTop = wrap.scrollHeight;
       return;
     }
     const node = wrap.querySelector(
@@ -44,7 +46,7 @@ export function MapScreen() {
     ) as HTMLElement | null;
     if (!node) return;
     const wrapH = wrap.clientHeight;
-    const targetTop = node.offsetTop - wrapH * 0.7;
+    const targetTop = node.offsetTop - wrapH * 0.65;
     wrap.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
   }, [run.act, run.currentNodeId, run.map]);
 
@@ -161,17 +163,43 @@ export function MapScreen() {
             );
           })}
           {(() => {
+            // Visible band = current row + next reachable row.
+            // Before entry (currentNodeId null): only entry row visible.
             const cur = run.map.find((n) => n.id === run.currentNodeId);
-            if (!cur) return null;
-            const fogTop = nodeCenter(cur).y;
+            const currentRow = cur ? cur.row : -1;
+            // Lower bound (past) — anything BELOW (higher y) the current row's
+            // bottom edge gets shrouded as "behind you".
+            const pastEdgeRow = currentRow >= 0 ? currentRow : 0;
+            // Upper bound (future mystery) — anything ABOVE (lower y) the
+            // peek-ahead row's top edge stays in shadow.
+            const peekRow = currentRow + 1;
+
+            const pastEdgeY =
+              PAD_Y + (rows - 1 - pastEdgeRow) * (NODE_H + ROW_GAP) + NODE_H + 24;
+            const peekTopY =
+              PAD_Y + (rows - 1 - peekRow) * (NODE_H + ROW_GAP) - 24;
+
             return (
-              <div
-                className="map-fog"
-                style={{
-                  top: `${fogTop}px`,
-                  height: `${mapHeight - fogTop}px`,
-                }}
-              />
+              <>
+                {/* Top fog: hides far-future rows (toward the boss) */}
+                <div
+                  className="map-fog map-fog-top"
+                  style={{
+                    top: 0,
+                    height: `${Math.max(0, peekTopY)}px`,
+                  }}
+                />
+                {/* Bottom fog: hides walked-over rows (toward entry) */}
+                {currentRow >= 0 && (
+                  <div
+                    className="map-fog map-fog-bottom"
+                    style={{
+                      top: `${pastEdgeY}px`,
+                      height: `${Math.max(0, mapHeight - pastEdgeY)}px`,
+                    }}
+                  />
+                )}
+              </>
             );
           })()}
         </div>

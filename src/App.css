@@ -178,7 +178,8 @@ button:disabled {
   flex-direction: column;
   gap: 16px;
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -566,7 +567,8 @@ button:disabled {
 
 /* Branching graph */
 .map-graph-wrap {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: auto;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -654,21 +656,33 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Darkness rolling up — past rows fade into shadow as you climb */
+/* Two-direction fog: future (top) hides what's ahead, past (bottom) hides what
+ * you've walked through. Only a 1-2 row band around the player stays clear. */
 .map-fog {
   position: absolute;
   left: 0;
   right: 0;
   pointer-events: none;
   z-index: 3;
+  transition: top 0.6s ease, height 0.6s ease;
+}
+.map-fog-top {
+  background: linear-gradient(
+    180deg,
+    rgba(4, 7, 13, 0.99) 0%,
+    rgba(4, 7, 13, 0.97) 60%,
+    rgba(4, 7, 13, 0.55) 90%,
+    rgba(4, 7, 13, 0) 100%
+  );
+}
+.map-fog-bottom {
   background: linear-gradient(
     180deg,
     rgba(4, 7, 13, 0) 0%,
-    rgba(4, 7, 13, 0.55) 30%,
-    rgba(4, 7, 13, 0.85) 60%,
-    rgba(4, 7, 13, 0.97) 100%
+    rgba(4, 7, 13, 0.55) 12%,
+    rgba(4, 7, 13, 0.92) 50%,
+    rgba(4, 7, 13, 0.99) 100%
   );
-  transition: top 0.6s ease, height 0.6s ease;
 }
 
 .deck-strip {
