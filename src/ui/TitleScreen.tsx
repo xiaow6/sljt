@@ -1,6 +1,7 @@
-import { actions } from "../store";
+import { actions, hasSave } from "../store";
 
 export function TitleScreen() {
+  const canContinue = hasSave();
   return (
     <div className="title-screen">
       <div className="title-stars" />
@@ -27,9 +28,22 @@ export function TitleScreen() {
             <span className="title-meta-value">⚡ 充能 · 换血科技</span>
           </div>
         </div>
-        <button className="btn-primary btn-large" onClick={() => actions.startRun()}>
-          启航
-        </button>
+        <div className="title-buttons">
+          {canContinue && (
+            <button
+              className="btn-primary btn-large"
+              onClick={() => actions.continueRun()}
+            >
+              继续游戏
+            </button>
+          )}
+          <button
+            className={canContinue ? "btn-large btn-secondary" : "btn-primary btn-large"}
+            onClick={() => actions.newRun()}
+          >
+            {canContinue ? "新游戏" : "启航"}
+          </button>
+        </div>
       </div>
     </div>
   );

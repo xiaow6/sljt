@@ -15,14 +15,71 @@ import {
 } from "./game/map";
 import { ELITE_RELIC_POOL, pickRandom } from "./game/relics";
 import { EVENTS, pickRandomEvent } from "./game/events";
+import { upgradeCard } from "./game/upgrade";
 
 type Listener = () => void;
 const listeners = new Set<Listener>();
+const SAVE_KEY = "sljt:save:v1";
+
+function loadSaved(): RunState | null {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    // Reject mid-combat / event saves: drop combat & rewards on restore.
+    parsed.combat = null;
+    parsed.rewardCards = null;
+    parsed.currentEventId = null;
+    parsed.eventResult = null;
+    if (parsed.screen === "battle" || parsed.screen === "reward" || parsed.screen === "event") {
+      parsed.screen = "map";
+    }
+    return parsed as RunState;
+  } catch {
+    return null;
+  }
+}
+
+function saveState(s: RunState) {
+  try {
+    // Don't persist mid-combat: combat state contains EnemyDef.pattern functions
+    // that don't survive JSON round-trips.
+    const persisted = { ...s, combat: null, rewardCards: null };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(persisted));
+  } catch {
+    /* quota / unavailable — ignore */
+  }
+}
+
+export function clearSave() {
+  try {
+    localStorage.removeItem(SAVE_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+export function hasSave(): boolean {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    const parsed = JSON.parse(raw);
+    return parsed && parsed.screen !== "title" && parsed.screen !== "gameover";
+  } catch {
+    return false;
+  }
+}
+
 let state: RunState = newRun();
 let pendingRelic: string | null = null;
 
 function emit() {
   state = { ...state };
+  // Save on every state change (except mid-combat — see saveState).
+  if (state.screen !== "battle" && state.screen !== "reward" && state.screen !== "event") {
+    saveState(state);
+  }
   for (const l of listeners) l();
 }
 
@@ -104,11 +161,25 @@ export const actions = {
   reset() {
     state = newRun();
     pendingRelic = null;
+    clearSave();
+    emit();
+  },
+  newRun() {
+    state = newRun();
+    pendingRelic = null;
+    clearSave();
+    state.screen = "map";
     emit();
   },
   startRun() {
     if (state.screen !== "title") return;
     state.screen = "map";
+    emit();
+  },
+  continueRun() {
+    const saved = loadSaved();
+    if (!saved) return;
+    state = saved;
     emit();
   },
   enterNode(id: string) {
@@ -118,12 +189,9 @@ export const actions = {
     if (!isReachable(state.map, id, state.currentNodeId)) return;
 
     if (node.type === "rest") {
-      state.playerHp = Math.min(
-        state.playerMaxHp,
-        state.playerHp + Math.floor(state.playerMaxHp * 0.3),
-      );
-      node.visited = true;
+      // Show choice: heal OR upgrade a card.
       state.currentNodeId = id;
+      state.screen = "rest";
       emit();
       return;
     }
@@ -205,6 +273,37 @@ export const actions = {
     state.currentEventId = null;
     state.eventResult = null;
     state.screen = "map";
+    emit();
+  },
+  restHeal() {
+    if (state.screen !== "rest") return;
+    state.playerHp = Math.min(
+      state.playerMaxHp,
+      state.playerHp + Math.floor(state.playerMaxHp * 0.3),
+    );
+    const node = getNode(state.map, state.currentNodeId);
+    if (node) node.visited = true;
+    state.screen = "map";
+    emit();
+  },
+  restUpgradeOpen() {
+    if (state.screen !== "rest") return;
+    state.screen = "rest_upgrade";
+    emit();
+  },
+  restUpgradeCard(idx: number) {
+    if (state.screen !== "rest_upgrade") return;
+    const card = state.deck[idx];
+    if (!card || card.upgraded) return;
+    state.deck[idx] = upgradeCard(card);
+    const node = getNode(state.map, state.currentNodeId);
+    if (node) node.visited = true;
+    state.screen = "map";
+    emit();
+  },
+  restCancel() {
+    if (state.screen !== "rest_upgrade") return;
+    state.screen = "rest";
     emit();
   },
 };

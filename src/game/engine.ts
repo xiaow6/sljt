@@ -63,8 +63,13 @@ export function makeEnemyState(def: EnemyDef): EnemyState {
   };
 }
 
+let nextInstanceId = 1;
+function withInstance<T extends { instanceId?: number }>(c: T): T {
+  return { ...c, instanceId: nextInstanceId++ };
+}
+
 export function startCombat(run: RunState, enemyDefs: EnemyDef[]): CombatState {
-  const draw = shuffle(run.deck.map((c) => ({ ...c })));
+  const draw = shuffle(run.deck.map((c) => withInstance(c)));
   const hasEnergyCore = run.relics.includes("energy_core");
   const maxEnergy = MAX_ENERGY + (hasEnergyCore ? 1 : 0);
   const player = makePlayer(run.playerHp, run.playerMaxHp);
@@ -415,30 +420,32 @@ function resolveEffects(
       break;
 
     case "data_scan": {
-      const n = c.player.charge >= 10 ? 3 : 2;
+      const baseN = c.player.charge >= 10 ? 3 : 2;
+      const n = card.upgraded ? baseN + 1 : baseN;
       drawCards(c, n);
       break;
     }
     case "plasma_strike": {
       if (!target) break;
-      let dmg = 10;
+      let dmg = card.upgraded ? 10 : 8;
       if (c.player.charge >= 3) {
         c.player.charge -= 3;
-        dmg += 12;
+        dmg += card.upgraded ? 14 : 10;
       }
       attackEnemy(c, target, dmg);
       break;
     }
     case "orbital_cannon": {
       if (!target) break;
-      const dmg = c.player.charge * 3;
+      const mult = card.upgraded ? 4 : 3;
+      const dmg = c.player.charge * mult;
       c.player.charge = 0;
       attackEnemy(c, target, dmg);
       break;
     }
     case "singularity_bomb": {
-      // canPlay already gated on charge ≥ X × 3.
-      const dmg = xValue * 10;
+      const mult = card.upgraded ? 12 : 10;
+      const dmg = xValue * mult;
       c.player.charge -= xValue * 3;
       for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, dmg);
       logMsg(c, `奇点炸弹: ${dmg} AOE,消耗 ${xValue * 3} 充能。`);
@@ -479,7 +486,7 @@ function resolveEffects(
       break;
     case "absolute_zero": {
       if (!target) break;
-      if (c.player.block >= 20) attackEnemy(c, target, 35);
+      if (c.player.block >= 20) attackEnemy(c, target, 28);
       break;
     }
 
@@ -500,7 +507,7 @@ function resolveEffects(
     }
     case "swarm_nuke": {
       const n = c.player.drones.reduce((s, d) => s + d.stacks, 0);
-      const dmg = n * 12;
+      const dmg = n * 10;
       c.player.drones = [];
       for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, dmg);
       logMsg(c, `机群核爆: ${dmg} AOE。`);
@@ -512,7 +519,7 @@ function resolveEffects(
     case "swarm_strike": {
       if (!target) break;
       const n = c.player.drones.reduce((s, d) => s + d.stacks, 0);
-      const dmg = 5 * Math.max(1, n);
+      const dmg = 4 * Math.max(1, n);
       attackEnemy(c, target, dmg);
       break;
     }
@@ -521,7 +528,7 @@ function resolveEffects(
       const combat = c.player.drones
         .filter((d) => d.kind === "combat")
         .reduce((s, d) => s + d.stacks, 0);
-      const dmg = 6 * Math.max(0, combat);
+      const dmg = 5 * Math.max(0, combat);
       attackEnemy(c, target, dmg);
       break;
     }
@@ -548,8 +555,8 @@ function resolveEffects(
     }
     case "protocol_override": {
       if (!target) break;
-      const bonus = target.hack * 4;
-      attackEnemy(c, target, 10 + bonus);
+      const bonus = target.hack * 3;
+      attackEnemy(c, target, 8 + bonus);
       break;
     }
     case "quantum_encrypt":
@@ -574,21 +581,21 @@ function attackEnemy(c: CombatState, target: EnemyState, baseDmg: number) {
 }
 
 function runDroneActions(c: CombatState, multiplier = 1) {
-  const aiHub = c.player.powers.find((p) => p.id === "ai_hub") ? 2 : 0;
+  const aiHub = c.player.powers.find((p) => p.id === "ai_hub") ? 1 : 0;
   for (const d of c.player.drones) {
     const overclock = d.overclocked ? 2 : 1;
     const stacks = d.stacks;
     const m = multiplier * overclock * stacks;
     if (d.kind === "combat") {
-      const baseDmg = (5 + aiHub) * m;
+      const baseDmg = (4 + aiHub) * m;
       const alive = aliveEnemies(c);
       if (alive.length > 0) applyDamageToEnemy(c, alive[0], baseDmg);
     } else if (d.kind === "guardian") {
-      c.player.block += (4 + aiHub) * m;
+      c.player.block += (3 + aiHub) * m;
     } else if (d.kind === "repair") {
-      selfHeal(c, (3 + aiHub) * m);
+      selfHeal(c, (2 + aiHub) * m);
     } else if (d.kind === "scout") {
-      drawCards(c, (1 + (aiHub > 0 ? 1 : 0)) * m);
+      drawCards(c, 1 * m);
     }
   }
 }

@@ -480,14 +480,18 @@ export function BattleScreen() {
               const isPlaying = playingCardIdx === i;
               const cls = [
                 isPlaying ? "card-playing" : "",
-                discarding ? "card-discarding" : "card-drawn",
+                discarding ? "card-discarding" : "",
               ]
                 .filter(Boolean)
                 .join(" ");
+              // Stable per-instance id keeps React from remounting cards when
+              // siblings shift indices (which would replay the draw animation).
+              // The drawAnimKey prefix changes only on a new turn, forcing a
+              // fresh entrance animation on the freshly drawn hand.
               return (
                 <div
-                  key={`${drawAnimKey}-${i}`}
-                  className={cls}
+                  key={`${drawAnimKey}-${card.instanceId ?? i}`}
+                  className={`card-drawn-anim ${cls}`}
                   style={{ animationDelay: `${i * 50}ms` }}
                 >
                   <CardView

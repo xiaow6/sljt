@@ -40,6 +40,9 @@ export interface CardDef {
   upgraded?: boolean;
   archetype?: Archetype;
   rarity?: Rarity;
+  // Per-instance unique id (assigned at combat start / draw); used as React key
+  // so cards keep identity through hand reshuffles.
+  instanceId?: number;
 }
 
 export type IntentKind =
@@ -149,7 +152,16 @@ export interface RunState {
   map: MapNode[];
   // Current node id; null when between acts (post-boss).
   currentNodeId: string | null;
-  screen: "title" | "map" | "battle" | "reward" | "rest" | "event" | "gameover" | "victory";
+  screen:
+    | "title"
+    | "map"
+    | "battle"
+    | "reward"
+    | "rest"
+    | "rest_upgrade"
+    | "event"
+    | "gameover"
+    | "victory";
   combat: CombatState | null;
   rewardCards: CardDef[] | null;
   currentEventId: string | null;

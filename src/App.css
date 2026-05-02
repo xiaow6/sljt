@@ -886,8 +886,9 @@ button:disabled {
   color: var(--crimson);
 }
 
-/* Card draw entrance animation (per-card stagger) */
-.card-drawn {
+/* Card draw entrance animation (per-card stagger). Driven by a stable React
+ * key so it only fires on a fresh turn's hand, not on hand-index shifts. */
+.card-drawn-anim {
   animation: card-drawn 0.45s ease-out backwards;
 }
 @keyframes card-drawn {
@@ -1603,6 +1604,156 @@ button:disabled {
   background: transparent;
   border: 1px solid var(--text-dim);
   color: var(--text-dim);
+}
+
+/* Rest screen */
+.rest-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 48px 32px;
+  background: radial-gradient(ellipse at top, rgba(75, 230, 234, 0.06) 0%, transparent 50%);
+}
+.rest-card {
+  max-width: 640px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 36px 40px;
+  text-align: center;
+  box-shadow: 0 0 64px rgba(0, 0, 0, 0.6);
+}
+.rest-icon {
+  font-size: 64px;
+  margin-bottom: 8px;
+}
+.rest-title {
+  font-size: 28px;
+  letter-spacing: 6px;
+  color: var(--cyan);
+  margin: 0 0 16px;
+  text-shadow: 0 0 16px rgba(75, 230, 234, 0.5);
+}
+.rest-flavor {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+  margin: 0 0 28px;
+}
+.rest-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.rest-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 24px 20px;
+  background: linear-gradient(180deg, #15324f 0%, #0a1f33 100%);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rest-choice:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 16px rgba(75, 230, 234, 0.4);
+  transform: translateY(-2px);
+}
+.rest-choice-icon {
+  font-size: 36px;
+}
+.rest-choice-name {
+  color: var(--cyan);
+  font-size: 16px;
+  letter-spacing: 4px;
+}
+.rest-choice-desc {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+.rest-choice-heal .rest-choice-icon {
+  color: #5cf7a8;
+}
+.rest-choice-upgrade .rest-choice-icon {
+  color: var(--gold);
+}
+
+.rest-upgrade-panel {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.rest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rest-header h2 {
+  margin: 0;
+  color: var(--cyan);
+  letter-spacing: 4px;
+}
+.rest-upgrade-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  overflow-y: auto;
+  justify-content: center;
+}
+.rest-card-pick {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.rest-card-pick:hover:not(:disabled) .card {
+  transform: translateY(-8px);
+  box-shadow: 0 0 24px var(--gold);
+  border-color: var(--gold);
+}
+.rest-card-pick:disabled .card {
+  opacity: 0.4;
+}
+.rest-upgraded-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 2px;
+  pointer-events: none;
+}
+
+/* Title buttons */
+.title-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+.btn-secondary {
+  background: linear-gradient(180deg, #15324f 0%, #0a1f33 100%);
+  border-color: var(--line);
+  color: var(--text-dim);
+}
+.btn-secondary:hover {
+  border-color: var(--text-dim);
 }
 
 /* Event screen */
