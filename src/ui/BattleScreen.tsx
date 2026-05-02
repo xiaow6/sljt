@@ -429,7 +429,14 @@ export function BattleScreen() {
           )}
           {player.doubleNextAttack && <div className="badge">下次攻击 ×2</div>}
           {player.vulnerable > 0 && (
-            <div className="badge badge-vuln">易伤 {player.vulnerable}</div>
+            <div className="badge badge-vuln tooltip-host" data-tip="受到伤害提高 50%。每回合减 1。">
+              易伤 {player.vulnerable}
+            </div>
+          )}
+          {player.weak > 0 && (
+            <div className="badge tooltip-host" data-tip="攻击伤害降低 25%。每回合减 1。">
+              虚弱 {player.weak}
+            </div>
           )}
           {player.blockNextHalf && (
             <div className="badge">下次伤害减半</div>

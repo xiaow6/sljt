@@ -17,6 +17,7 @@ import { ELITE_RELIC_POOL, pickRandom } from "./game/relics";
 import { EVENTS, pickRandomEvent } from "./game/events";
 import { upgradeCard } from "./game/upgrade";
 import { rollShop } from "./game/shop";
+import { unlockCard, unlockEnemy } from "./codex";
 
 type Listener = () => void;
 const listeners = new Set<Listener>();
@@ -169,6 +170,8 @@ export const actions = {
     state = newRun();
     pendingRelic = null;
     clearSave();
+    // Unlock starter cards in codex.
+    state.deck.forEach((c) => unlockCard(c.id));
     state.screen = "map";
     emit();
   },
@@ -226,6 +229,7 @@ export const actions = {
     if (node.type === "battle" || node.type === "elite" || node.type === "boss") {
       state.currentNodeId = id;
       const enemies = pickEncounter(node);
+      enemies.forEach((e) => unlockEnemy(e.id));
       state.combat = startCombat(state, enemies);
       state.screen = "battle";
       emit();
@@ -247,7 +251,10 @@ export const actions = {
   },
   takeReward(card: CardDef | null) {
     if (state.screen !== "reward") return;
-    if (card) state.deck.push({ ...card });
+    if (card) {
+      state.deck.push({ ...card });
+      unlockCard(card.id);
+    }
     if (pendingRelic) {
       state.relics.push(pendingRelic);
       pendingRelic = null;
@@ -324,6 +331,7 @@ export const actions = {
     if (state.gold < slot.price) return;
     state.gold -= slot.price;
     state.deck.push({ ...slot.card });
+    unlockCard(slot.card.id);
     slot.sold = true;
     emit();
   },

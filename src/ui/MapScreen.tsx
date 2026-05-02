@@ -1,19 +1,21 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { actions, useRun } from "../store";
 import { MenuModal } from "./MenuModal";
+import { useLang, t } from "../i18n";
 import { RelicBar } from "./RelicBar";
 import { DeckModal } from "./DeckModal";
 import { getAct } from "../game/acts";
 import type { MapNode } from "../game/types";
 
-const TYPE_LABEL: Record<string, string> = {
-  battle: "战斗",
-  elite: "精英",
-  rest: "休整",
-  shop: "商店",
-  boss: "BOSS",
-  event: "事件",
-};
+function nodeLabel(type: string): string {
+  if (type === "battle") return t("node.battle");
+  if (type === "elite") return t("node.elite");
+  if (type === "rest") return t("node.rest");
+  if (type === "shop") return t("node.shop");
+  if (type === "boss") return t("node.boss");
+  if (type === "event") return t("node.event");
+  return type;
+}
 
 const TYPE_ICON: Record<string, string> = {
   battle: "⚔",
@@ -25,6 +27,7 @@ const TYPE_ICON: Record<string, string> = {
 };
 
 export function MapScreen() {
+  useLang();
   const run = useRun();
   const [showDeck, setShowDeck] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -85,7 +88,7 @@ export function MapScreen() {
       <div className="map-header">
         <div>
           <div className="map-act-label">{act.name}</div>
-          <h1>{act.subtitle}</h1>
+          <h1>{t(`map.subtitle.act${act.id}`)}</h1>
         </div>
         <div className="map-stats">
           <span className="stat-pill">
@@ -95,7 +98,7 @@ export function MapScreen() {
             <span className="stat-icon chip-icon">◈</span> {run.gold}
           </span>
           <button className="stat-pill stat-clickable" onClick={() => setShowDeck(true)}>
-            <span className="stat-icon">📜</span> 牌组 {run.deck.length}
+            <span className="stat-icon">📜</span> {t("stat.deck")} {run.deck.length}
           </button>
           <button
             className="stat-pill stat-clickable map-menu-btn"
@@ -167,7 +170,7 @@ export function MapScreen() {
                 onClick={() => actions.enterNode(n.id)}
               >
                 <div className="node-icon">{TYPE_ICON[n.type]}</div>
-                <div className="node-label">{TYPE_LABEL[n.type]}</div>
+                <div className="node-label">{nodeLabel(n.type)}</div>
               </button>
             );
           })}

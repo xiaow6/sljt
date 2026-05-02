@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { EnemyState, Intent } from "../game/types";
+import { useLang, t } from "../i18n";
+import { enemyName } from "../game/lookup";
 
 interface Props {
   enemy: EnemyState;
@@ -16,8 +18,10 @@ export function EnemyView({
   onClick,
   playerVulnerable = 0,
 }: Props) {
+  useLang();
   const [imgOk, setImgOk] = useState(true);
   const showImg = !!enemy.def.art && imgOk;
+  const name = enemyName(enemy.def);
   return (
     <div
       className={`enemy ${selectable ? "enemy-selectable" : ""} ${
@@ -32,16 +36,16 @@ export function EnemyView({
         {showImg && (
           <img
             src={`/art/${enemy.def.art}`}
-            alt={enemy.def.name}
+            alt={name}
             onError={() => setImgOk(false)}
             className="enemy-art-img"
           />
         )}
         {!showImg && (
-          <div className="enemy-name-placeholder">{enemy.def.name}</div>
+          <div className="enemy-name-placeholder">{name}</div>
         )}
       </div>
-      <div className="enemy-name">{enemy.def.name}</div>
+      <div className="enemy-name">{name}</div>
       <div className="enemy-hp-bar">
         <div
           className="enemy-hp-fill"
@@ -52,18 +56,30 @@ export function EnemyView({
         </span>
       </div>
       <div className="enemy-status">
-        {enemy.block > 0 && <span className="badge badge-block">🛡 {enemy.block}</span>}
+        {enemy.block > 0 && (
+          <span className="badge badge-block tooltip-host" data-tip={t("kw.block.desc")}>
+            🛡 {enemy.block}
+          </span>
+        )}
         {enemy.strength > 0 && (
-          <span className="badge badge-str">力量 +{enemy.strength}</span>
+          <span className="badge badge-str tooltip-host" data-tip={t("kw.strength.desc")}>
+            {t("kw.strength")} +{enemy.strength}
+          </span>
         )}
         {enemy.vulnerable > 0 && (
-          <span className="badge badge-vuln">易伤 {enemy.vulnerable}</span>
+          <span className="badge badge-vuln tooltip-host" data-tip={t("kw.vulnerable.desc")}>
+            {t("kw.vulnerable")} {enemy.vulnerable}
+          </span>
         )}
         {enemy.hack > 0 && (
-          <span className="badge badge-hack">⌬ {enemy.hack}</span>
+          <span className="badge badge-hack tooltip-host" data-tip={t("kw.hack.desc")}>
+            ⌬ {enemy.hack}
+          </span>
         )}
         {enemy.skipNext && (
-          <span className="badge badge-skip">已入侵</span>
+          <span className="badge badge-skip tooltip-host" data-tip={t("kw.skip.desc")}>
+            {t("kw.skip")}
+          </span>
         )}
       </div>
     </div>

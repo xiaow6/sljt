@@ -1240,6 +1240,39 @@ button:disabled {
   border-color: var(--gold);
   color: var(--gold);
 }
+
+/* Hover tooltip on status keywords */
+.tooltip-host {
+  position: relative;
+  cursor: help;
+}
+.tooltip-host::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-0);
+  color: var(--text);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+  white-space: normal;
+  width: 220px;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transform-origin: bottom center;
+  transition: opacity 0.12s 0.15s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+  z-index: 50;
+}
+.tooltip-host:hover::after {
+  opacity: 1;
+}
 .badge-hack {
   background: rgba(192, 132, 252, 0.15);
   border-color: #c084fc;
@@ -1989,11 +2022,209 @@ button:disabled {
   overflow-y: auto;
 }
 
+/* Codex */
+.codex-modal {
+  width: 1100px;
+  max-width: 96vw;
+  max-height: 90vh;
+}
+.codex-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.codex-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  padding: 8px 18px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+}
+.codex-tab.active {
+  border-color: var(--cyan-dim);
+  color: var(--cyan);
+  background: rgba(75, 230, 234, 0.05);
+}
+.codex-body {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 16px;
+  position: relative;
+}
+.codex-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.codex-card-pick {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.codex-card-pick:disabled {
+  cursor: not-allowed;
+}
+.codex-card-pick:hover:not(:disabled) .card {
+  transform: translateY(-6px);
+}
+.codex-locked-card {
+  width: 160px;
+  height: 224px;
+  background: var(--bg-2);
+  border: 2px dashed var(--line);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.codex-lock-icon {
+  font-size: 56px;
+  color: var(--text-dim);
+}
+.codex-locked-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+}
+
+.codex-enemy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.codex-enemy-pick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+}
+.codex-enemy-pick:hover:not(:disabled) {
+  border-color: var(--cyan);
+  transform: translateY(-2px);
+}
+.codex-enemy-pick.codex-locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.codex-enemy-art {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--crimson);
+}
+.codex-enemy-locked {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--bg-1);
+  border-radius: 50%;
+  border: 2px dashed var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  color: var(--text-dim);
+}
+.codex-enemy-name {
+  color: var(--text);
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.codex-detail {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.codex-detail-card {
+  display: flex;
+  gap: 24px;
+  background: var(--bg-1);
+  border: 1px solid var(--cyan);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 720px;
+  align-items: flex-start;
+}
+.codex-detail-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 240px;
+}
+.codex-detail-info h3 {
+  margin: 0;
+  color: var(--cyan);
+  letter-spacing: 4px;
+}
+.codex-detail-stats {
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+.codex-detail-lore-label {
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 4px;
+  margin-top: 8px;
+}
+.codex-detail-lore {
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.7;
+  font-style: italic;
+  border-left: 2px solid var(--gold);
+  padding-left: 12px;
+  white-space: pre-line;
+}
+.codex-detail-enemy-art {
+  width: 240px;
+  height: 240px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Lang toggle */
+.title-lang-btn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: var(--bg-1);
+  border: 1px solid var(--cyan-dim);
+  color: var(--cyan);
+  padding: 6px 14px;
+  font-size: 13px;
+  letter-spacing: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 5;
+}
+.title-lang-btn:hover {
+  border-color: var(--cyan);
+}
+
 /* Title buttons */
 .title-buttons {
   display: flex;
   gap: 12px;
   margin-top: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .btn-secondary {
   background: linear-gradient(180deg, #15324f 0%, #0a1f33 100%);

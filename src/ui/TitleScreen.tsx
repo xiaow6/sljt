@@ -1,31 +1,48 @@
+import { useState } from "react";
 import { actions, hasSave } from "../store";
+import { getLang, setLang, t, useLang } from "../i18n";
+import { CodexModal } from "./CodexModal";
 
 export function TitleScreen() {
+  useLang();
   const canContinue = hasSave();
+  const [showCodex, setShowCodex] = useState(false);
   return (
     <div className="title-screen">
       <div className="title-stars" />
+      <button
+        className="title-lang-btn"
+        onClick={() => setLang(getLang() === "zh" ? "en" : "zh")}
+        title="Toggle language"
+      >
+        {t("title.lang")}
+      </button>
       <div className="title-content">
-        <div className="title-eyebrow">人类深空探索军 · 第七巡航舰队</div>
-        <h1 className="title-name">深空爬塔</h1>
-        <h2 className="title-subname">先驱者母舰</h2>
+        <div className="title-eyebrow">{t("title.eyebrow")}</div>
+        <h1 className="title-name">{t("app.title")}</h1>
+        <h2 className="title-subname">{t("title.subtitle")}</h2>
         <p className="title-flavor">
-          外缘星域,你唤醒了沉睡十亿年的「先驱者」——一支硅基外星文明。
-          <br />
-          孤身一人,你必须穿越他们的母舰,在到达核心之前撑住每一次冲锋。
+          {t("title.flavor")
+            .split("\n")
+            .map((line, i) => (
+              <span key={i}>
+                {line}
+                <br />
+              </span>
+            ))}
         </p>
         <div className="title-meta">
           <div className="title-meta-item">
-            <span className="title-meta-label">职业</span>
-            <span className="title-meta-value">指挥官 · 纯科技流</span>
+            <span className="title-meta-label">{t("title.role.label")}</span>
+            <span className="title-meta-value">{t("title.role.value")}</span>
           </div>
           <div className="title-meta-item">
-            <span className="title-meta-label">起始 HP</span>
+            <span className="title-meta-label">{t("title.hp.label")}</span>
             <span className="title-meta-value">70</span>
           </div>
           <div className="title-meta-item">
-            <span className="title-meta-label">核心机制</span>
-            <span className="title-meta-value">⚡ 充能 · 换血科技</span>
+            <span className="title-meta-label">{t("title.mech.label")}</span>
+            <span className="title-meta-value">{t("title.mech.value")}</span>
           </div>
         </div>
         <div className="title-buttons">
@@ -34,17 +51,25 @@ export function TitleScreen() {
               className="btn-primary btn-large"
               onClick={() => actions.continueRun()}
             >
-              继续游戏
+              {t("title.continue")}
             </button>
           )}
           <button
             className={canContinue ? "btn-large btn-secondary" : "btn-primary btn-large"}
             onClick={() => actions.newRun()}
           >
-            {canContinue ? "新游戏" : "启航"}
+            {canContinue ? t("title.new") : t("title.start")}
+          </button>
+          <button
+            className="btn-large btn-secondary"
+            onClick={() => setShowCodex(true)}
+          >
+            📖 {t("title.codex")}
           </button>
         </div>
       </div>
+      {showCodex && <CodexModal onClose={() => setShowCodex(false)} />}
     </div>
   );
 }
+

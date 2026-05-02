@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { CardDef } from "../game/types";
+import { useLang, t } from "../i18n";
+import { cardName, cardDescription } from "../game/lookup";
 
 interface Props {
   card: CardDef;
@@ -10,6 +12,7 @@ interface Props {
 }
 
 export function CardView({ card, playable = true, selected, onClick, small }: Props) {
+  useLang(); // re-render on language switch
   const typeColor =
     card.type === "attack"
       ? "card-attack"
@@ -19,6 +22,8 @@ export function CardView({ card, playable = true, selected, onClick, small }: Pr
   const [imgOk, setImgOk] = useState(true);
   const showImg = !!card.art && imgOk;
   const rarityClass = card.rarity ? `card-rarity-${card.rarity}` : "";
+  const name = cardName(card);
+  const desc = cardDescription(card);
   return (
     <div
       className={`card ${typeColor} ${rarityClass} ${playable ? "" : "card-unplayable"} ${
@@ -27,26 +32,26 @@ export function CardView({ card, playable = true, selected, onClick, small }: Pr
       onClick={onClick}
     >
       <div className="card-cost">{card.cost === "X" ? "X" : card.cost}</div>
-      <div className="card-name">{card.name}</div>
+      <div className="card-name">{name}</div>
       <div className="card-art">
         {showImg && (
           <img
             src={`/art/${card.art}`}
-            alt={card.name}
+            alt={name}
             onError={() => setImgOk(false)}
             className="card-art-img"
           />
         )}
-        {!showImg && <div className="card-art-placeholder">{card.name}</div>}
+        {!showImg && <div className="card-art-placeholder">{name}</div>}
       </div>
       <div className="card-type-banner">{labelType(card.type)}</div>
-      <div className="card-desc">{card.description}</div>
+      <div className="card-desc">{desc}</div>
     </div>
   );
 }
 
-function labelType(t: CardDef["type"]) {
-  if (t === "attack") return "攻击";
-  if (t === "skill") return "技能";
-  return "能力";
+function labelType(ty: CardDef["type"]) {
+  if (ty === "attack") return t("ctype.attack");
+  if (ty === "skill") return t("ctype.skill");
+  return t("ctype.power");
 }
