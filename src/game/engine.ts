@@ -291,6 +291,11 @@ export function canPlay(
     const e = c.enemies[targetIdx];
     if (!e || !e.alive) return { ok: false, reason: "目标无效" };
   }
+  // Per-card charge requirements (finishers gated on resource pool).
+  if (card.id === "singularity_bomb") {
+    const need = (xValue ?? 0) * 3;
+    if (c.player.charge < need) return { ok: false, reason: `充能不足 (需要 ${need})` };
+  }
   return { ok: true };
 }
 
@@ -432,12 +437,11 @@ function resolveEffects(
       break;
     }
     case "singularity_bomb": {
-      // Stable linear: X × 10 AOE damage. Consume up to X × 3 charge.
+      // canPlay already gated on charge ≥ X × 3.
       const dmg = xValue * 10;
-      const consumed = Math.min(c.player.charge, xValue * 3);
-      c.player.charge -= consumed;
+      c.player.charge -= xValue * 3;
       for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, dmg);
-      logMsg(c, `奇点炸弹: ${dmg} AOE,消耗 ${consumed} 充能。`);
+      logMsg(c, `奇点炸弹: ${dmg} AOE,消耗 ${xValue * 3} 充能。`);
       break;
     }
     case "overload_discharge": {

@@ -204,7 +204,7 @@ export const CARDS: Record<string, CardDef> = {
     cost: "X",
     type: "attack",
     target: "all_enemies",
-    description: "对所有敌人造成 X × 10 伤害。消耗 X × 3 充能(不足则消耗全部)。消耗。",
+    description: "对所有敌人造成 X × 10 伤害。消耗 X × 3 充能(不足则无法施放)。消耗。",
     art: "cards/singularity_bomb.png",
     effect: { custom: "singularity_bomb" },
     exhaust: true,

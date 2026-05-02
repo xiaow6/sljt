@@ -515,24 +515,36 @@ export function BattleScreen() {
           <div className="pile-info">
             {c.exhaust.length > 0 && <div>消耗 {c.exhaust.length}</div>}
           </div>
-          {xCard && (
-            <div className="x-cost-picker">
-              <div>X = {xValue}</div>
-              <button onClick={() => setXValue(Math.max(0, xValue - 1))}>−</button>
-              <button
-                onClick={() => setXValue(Math.min(player.energy, xValue + 1))}
-              >
-                +
-              </button>
-              <button
-                className="btn-primary"
-                disabled={xValue <= 0}
-                onClick={() => attemptPlay(null)}
-              >
-                引爆
-              </button>
-            </div>
-          )}
+          {xCard && (() => {
+            const isSingularity = selected?.id === "singularity_bomb";
+            const chargeNeed = isSingularity ? xValue * 3 : 0;
+            const chargeOk = !isSingularity || player.charge >= chargeNeed;
+            return (
+              <div className="x-cost-picker">
+                <div>X = {xValue}</div>
+                {isSingularity && (
+                  <div
+                    className={`x-cost-charge ${chargeOk ? "" : "x-cost-fail"}`}
+                  >
+                    需 {chargeNeed} ⚡
+                  </div>
+                )}
+                <button onClick={() => setXValue(Math.max(0, xValue - 1))}>−</button>
+                <button
+                  onClick={() => setXValue(Math.min(player.energy, xValue + 1))}
+                >
+                  +
+                </button>
+                <button
+                  className="btn-primary"
+                  disabled={xValue <= 0 || !chargeOk}
+                  onClick={() => attemptPlay(null)}
+                >
+                  引爆
+                </button>
+              </div>
+            );
+          })()}
           <button
             className="btn-end-turn"
             disabled={discarding}

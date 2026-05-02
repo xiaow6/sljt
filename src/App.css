@@ -1417,6 +1417,15 @@ button:disabled {
   border-radius: 4px;
   font-size: 12px;
 }
+.x-cost-charge {
+  color: var(--charge);
+  font-weight: 600;
+  padding: 0 4px;
+}
+.x-cost-fail {
+  color: var(--crimson);
+  text-decoration: line-through;
+}
 
 .targeting-banner {
   position: absolute;
