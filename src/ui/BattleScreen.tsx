@@ -154,7 +154,8 @@ export function BattleScreen() {
 
   if (!c) return null;
   const player = c.player;
-  const isBoss = run.map[run.currentNode]?.type === "boss";
+  const isBoss =
+    run.map.find((n) => n.id === run.currentNodeId)?.type === "boss";
   const selected: CardDef | null =
     selectedCardIdx != null ? c.hand[selectedCardIdx] : null;
 

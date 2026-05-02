@@ -1,6 +1,6 @@
 import type { RunState } from "./types";
 import { makeStartingDeck } from "./cards";
-import { generateMap } from "./map";
+import { generateActMap } from "./map";
 import { STARTER_RELIC_POOL, pickRandom } from "./relics";
 
 const START_HP = 70;
@@ -13,10 +13,13 @@ export function newRun(): RunState {
     gold: 0,
     relics: [pickRandom(STARTER_RELIC_POOL)],
     preloadedHack: 0,
-    map: generateMap(),
-    currentNode: 0,
+    act: 1,
+    map: generateActMap(1),
+    currentNodeId: null,
     screen: "title",
     combat: null,
     rewardCards: null,
+    currentEventId: null,
+    eventResult: null,
   };
 }

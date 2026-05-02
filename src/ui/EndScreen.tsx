@@ -9,7 +9,7 @@ export function EndScreen() {
       <h1>{won ? "胜利" : "阵亡"}</h1>
       <p className="end-flavor">
         {won
-          ? "你击溃了织网者,母舰核心被你掌控。指挥官的传说从这里开始。"
+          ? "你击碎了先驱者之心。十亿年的沉睡终结于你的手。"
           : "你的指挥官倒在了先驱者的爪下。深空再无回响。"}
       </p>
       <div className="end-stats">
@@ -24,10 +24,12 @@ export function EndScreen() {
           <span className="end-stat-value">{run.deck.length}</span>
         </div>
         <div className="end-stat">
-          <span className="end-stat-label">通过节点</span>
-          <span className="end-stat-value">
-            {run.currentNode} / {run.map.length}
-          </span>
+          <span className="end-stat-label">推进至</span>
+          <span className="end-stat-value">Act {run.act}</span>
+        </div>
+        <div className="end-stat">
+          <span className="end-stat-label">金币</span>
+          <span className="end-stat-value">{run.gold}</span>
         </div>
       </div>
       {run.relics.length > 0 && (

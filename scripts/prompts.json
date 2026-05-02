@@ -74,12 +74,27 @@
     { "id": "dormant_sentinel", "name": "休眠哨兵", "prompt": "a four-legged ancient alien sentinel awakening from stasis, dust falling off geometric carapace, glowing crimson core" },
     { "id": "voidling", "name": "虚空使徒", "prompt": "a robed alien priest with a void where its face should be, cyan runes orbiting its form" },
     { "id": "evolved", "name": "进化体", "prompt": "an elite mutated alien warrior, towering biomechanical form with extra arms and ancient runic plating, menacing pose" },
-    { "id": "weaver", "name": "织网者 (Boss)", "prompt": "a colossal eldritch alien weaver suspended in a cathedral chamber, six tendrils manipulating threads of time, glowing crimson eyes, terrifying scale" }
+    { "id": "weaver", "name": "织网者 (Boss)", "prompt": "a colossal eldritch alien weaver suspended in a cathedral chamber, six tendrils manipulating threads of time, glowing crimson eyes, terrifying scale" },
+
+    { "id": "bio_titan", "name": "生物泰坦", "prompt": "a hulking biomechanical alien titan, bone armor fused with corroded metal plating, slow heavy menace, organic muscle visible through cracks" },
+    { "id": "swarm_queen", "name": "孢子母巢", "prompt": "a bloated alien queen hive, transparent egg sacs glowing with parasites, tendrils dragging behind it across a wet biomech floor" },
+    { "id": "gravity_warden", "name": "引力监管者 (Boss)", "prompt": "a colossal floating alien sentinel encased in spinning gravity rings, multiple gauntleted arms wielding singularity orbs, ominous silhouette" },
+
+    { "id": "runic_priest", "name": "符文祭司", "prompt": "an ancient alien priest robed in runic energy, raising glowing crimson sigils into the air, multiple floating runes circling its head" },
+    { "id": "silicon_inquisitor", "name": "硅基审讯官 (Elite)", "prompt": "a tall geometric alien inquisitor of fractured silicon armor, multiple piercing blades extending from its forearms, glowing red interrogation eye" },
+    { "id": "time_eater", "name": "蚀时者", "prompt": "a wraithlike alien with a hollow chest containing a swirling clock-vortex, hands made of broken time fragments, ghostly motion blur" },
+    { "id": "council_speaker", "name": "议会发言人 (Boss)", "prompt": "a colossal robed alien high speaker on a floating throne, six holographic faces orbiting its head, runic monoliths around it, hierarchical menace" },
+
+    { "id": "precursor_heart", "name": "先驱者之心 (Final Boss)", "prompt": "a colossal beating bio-mechanical alien heart organ the size of a building, surrounded by orbiting runic plates and pulsing cyan veins, cathedral-scale, world-ending presence" }
   ],
   "scenes": [
     { "id": "battle_corridor", "name": "母舰走廊", "prompt": "a dark interior corridor of an ancient alien mothership, dripping bioluminescent biomech walls, fog and steam, distant red emergency lights, no characters, environment background, wide cinematic composition" },
     { "id": "map_overview", "name": "母舰总览", "prompt": "exterior view of a colossal ancient alien mothership drifting in deep space, organic biomech architecture meets geometric stone, glowing cyan veins running through it, distant nebula behind, cinematic wide shot, no characters" },
-    { "id": "boss_room", "name": "核心议会", "prompt": "the cathedral-like core chamber of an alien mothership, vast vaulted hall with floating runic monoliths, swirling cyan plasma vortex at center, ominous emptiness, no characters, environment background" }
+    { "id": "boss_room", "name": "核心议会", "prompt": "the cathedral-like core chamber of an alien mothership, vast vaulted hall with floating runic monoliths, swirling cyan plasma vortex at center, ominous emptiness, no characters, environment background" },
+
+    { "id": "act2_biocore", "name": "Act 2 · 生物核心", "prompt": "the wet bio-mechanical core of an alien mothership, vast organic chamber with pulsating veins and bone arches dripping ichor, distant heartbeat glow, no characters, environment background, wide cinematic composition" },
+    { "id": "act3_council_spire", "name": "Act 3 · 议会塔", "prompt": "a vast vertical spire of stacked alien runic chambers stretching upward into darkness, holographic data streams between platforms, vast scale, no characters, environment background" },
+    { "id": "act4_heart", "name": "Act 4 · 先驱者之心", "prompt": "the innermost sanctum of an alien mothership, a vast vaulted chamber with a colossal pulsing biomech heart at the center, beams of cyan blood-light radiating outward, no characters, climactic sci-fi environment" }
   ],
   "portraits": [
     { "id": "commander", "name": "指挥官", "prompt": "head and shoulders portrait of a battle-hardened human deep space commander in cyan-trimmed power armor, helmet visor open showing a determined face, holographic HUD reflections in the glass, dramatic rim lighting" }

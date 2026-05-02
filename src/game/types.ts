@@ -114,11 +114,17 @@ export interface CombatState {
   over: "win" | "lose" | null;
 }
 
-export type NodeType = "battle" | "elite" | "rest" | "shop" | "boss" | "unknown";
+export type NodeType = "battle" | "elite" | "rest" | "shop" | "boss" | "event";
 export interface MapNode {
   id: string;
   type: NodeType;
   visited: boolean;
+  // Grid coords
+  row: number;
+  col: number;
+  // Outgoing edges by id (next-row neighbors).
+  next: string[];
+  act: number;
 }
 
 export interface RunState {
@@ -127,11 +133,14 @@ export interface RunState {
   playerMaxHp: number;
   gold: number;
   relics: string[];
-  // Persistent across-battle state (mind_hijack stash)
   preloadedHack: number;
+  act: number; // 1..4
   map: MapNode[];
-  currentNode: number;
-  screen: "title" | "map" | "battle" | "reward" | "rest" | "gameover" | "victory";
+  // Current node id; null when between acts (post-boss).
+  currentNodeId: string | null;
+  screen: "title" | "map" | "battle" | "reward" | "rest" | "event" | "gameover" | "victory";
   combat: CombatState | null;
   rewardCards: CardDef[] | null;
+  currentEventId: string | null;
+  eventResult: string | null;
 }

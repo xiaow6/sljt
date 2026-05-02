@@ -176,13 +176,19 @@ button:disabled {
   padding: 32px 48px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 16px;
   position: relative;
   min-height: 100vh;
-  background-image: url(/art/scenes/map_overview.png);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+.map-act-label {
+  color: var(--cyan-dim);
+  letter-spacing: 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
 }
 .map-screen::before {
   content: "";
@@ -550,6 +556,96 @@ button:disabled {
   50% {
     box-shadow: 0 0 36px rgba(75, 230, 234, 0.9);
   }
+}
+
+/* Branching graph */
+.map-graph-wrap {
+  flex: 1;
+  overflow: auto;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, transparent 0%, rgba(75, 230, 234, 0.03) 50%, transparent 100%);
+  padding: 16px;
+}
+.map-graph {
+  position: relative;
+  margin: 0 auto;
+}
+.map-edges {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+.map-edges line.edge {
+  stroke: var(--line);
+  stroke-width: 2;
+  stroke-dasharray: 4 4;
+}
+.map-edges line.edge-done {
+  stroke: var(--cyan-dim);
+  stroke-width: 2.5;
+  stroke-dasharray: none;
+}
+.map-node-btn {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 50%;
+  padding: 0;
+  background: var(--bg-1);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.map-node-btn .node-icon {
+  font-size: 22px;
+}
+.map-node-btn .node-label {
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+.map-node-btn.node-done {
+  opacity: 0.35;
+  border-color: var(--cyan-dim);
+}
+.map-node-btn.node-current {
+  border-color: var(--cyan);
+  box-shadow: 0 0 24px rgba(75, 230, 234, 0.6);
+  animation: pulse 1.5s infinite;
+  z-index: 2;
+}
+.map-node-btn.node-reachable {
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(75, 230, 234, 0.4);
+  animation: pulse 2s infinite;
+}
+.map-node-btn.node-future {
+  opacity: 0.4;
+}
+.map-node-btn.node-boss {
+  border-color: var(--crimson);
+  box-shadow: 0 0 16px rgba(232, 52, 76, 0.5);
+}
+.map-node-btn.node-elite {
+  border-color: var(--gold);
+}
+.map-node-btn.node-rest {
+  border-color: #4caf50;
+}
+.map-node-btn.node-shop {
+  border-color: #c084fc;
+}
+.map-node-btn.node-event {
+  border-color: var(--gold);
+  border-style: dashed;
+}
+.map-node-btn:disabled {
+  cursor: not-allowed;
 }
 
 .deck-strip {
@@ -1332,6 +1428,89 @@ button:disabled {
   background: transparent;
   border: 1px solid var(--text-dim);
   color: var(--text-dim);
+}
+
+/* Event screen */
+.event-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 48px 32px;
+  background: radial-gradient(ellipse at top, rgba(192, 132, 252, 0.08) 0%, transparent 50%);
+}
+.event-card {
+  max-width: 640px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 36px 40px;
+  text-align: center;
+  box-shadow: 0 0 64px rgba(0, 0, 0, 0.6);
+}
+.event-icon {
+  font-size: 64px;
+  margin-bottom: 8px;
+}
+.event-name {
+  font-size: 28px;
+  letter-spacing: 6px;
+  color: var(--cyan);
+  margin: 0 0 16px;
+  text-shadow: 0 0 16px rgba(75, 230, 234, 0.5);
+}
+.event-flavor {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+  margin: 0 0 28px;
+  letter-spacing: 0.5px;
+}
+.event-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.event-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 18px;
+  text-align: left;
+  background: linear-gradient(180deg, #15324f 0%, #0a1f33 100%);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.event-choice:hover:not(:disabled) {
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(75, 230, 234, 0.4);
+}
+.event-choice-label {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+}
+.event-choice-hint {
+  color: var(--cyan-dim);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.event-resolved {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+.event-result-text {
+  background: rgba(75, 230, 234, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px 20px;
+  color: var(--cyan);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
 }
 
 /* End screen */

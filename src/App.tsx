@@ -4,6 +4,7 @@ import { MapScreen } from "./ui/MapScreen";
 import { BattleScreen } from "./ui/BattleScreen";
 import { RewardScreen } from "./ui/RewardScreen";
 import { EndScreen } from "./ui/EndScreen";
+import { EventScreen } from "./ui/EventScreen";
 import "./App.css";
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
       {run.screen === "map" && <MapScreen />}
       {run.screen === "battle" && <BattleScreen />}
       {run.screen === "reward" && <RewardScreen />}
+      {run.screen === "event" && <EventScreen />}
       {(run.screen === "victory" || run.screen === "gameover") && <EndScreen />}
     </div>
   );
