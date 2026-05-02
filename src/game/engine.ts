@@ -2,7 +2,6 @@ import type {
   CardDef,
   CombatState,
   DroneKind,
-  DroneState,
   EnemyDef,
   EnemyState,
   PlayerState,

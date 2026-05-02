@@ -1,7 +1,7 @@
 import type { CardDef, EnemyDef, MapNode, NodeType } from "./types";
 import { ENEMIES } from "./enemies";
 import { CARDS, REWARD_POOL_IDS } from "./cards";
-import { ACTS, getAct, pickRewardArchetype } from "./acts";
+import { getAct, pickRewardArchetype } from "./acts";
 
 // === Branching map generation ===
 // Each act is a 6-column-wide × N-row branching graph.

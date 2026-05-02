@@ -34,11 +34,6 @@ function healPlayer(run: RunState, n: number) {
   run.playerHp = Math.min(run.playerMaxHp, run.playerHp + n);
 }
 
-function addCard(run: RunState, id: string) {
-  const card = CARDS[id];
-  if (card) run.deck.push({ ...card });
-}
-
 function randomRewardCard(): CardDef {
   const id = pickRandom(REWARD_POOL_IDS);
   return { ...CARDS[id] };
