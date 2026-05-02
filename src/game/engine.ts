@@ -432,15 +432,12 @@ function resolveEffects(
       break;
     }
     case "singularity_bomb": {
-      const charge = Math.min(c.player.charge, xValue * 3);
-      const fullPower = charge >= xValue * 3;
-      const dmg = fullPower ? xValue * 8 : Math.floor((xValue * 8) / 2);
-      c.player.charge -= charge;
+      // Stable linear: X × 10 AOE damage. Consume up to X × 3 charge.
+      const dmg = xValue * 10;
+      const consumed = Math.min(c.player.charge, xValue * 3);
+      c.player.charge -= consumed;
       for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, dmg);
-      logMsg(
-        c,
-        fullPower ? `奇点炸弹引爆! ${dmg} AOE` : `奇点炸弹能量不足: ${dmg} AOE`,
-      );
+      logMsg(c, `奇点炸弹: ${dmg} AOE,消耗 ${consumed} 充能。`);
       break;
     }
     case "overload_discharge": {
