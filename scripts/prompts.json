@@ -38,9 +38,9 @@
     { "id": "iron_wall", "name": "铁壁", "prompt": "a colossal slab of armored bulkhead slamming down between a soldier and an alien onslaught, sparks at the seams" },
     { "id": "resonance_barrier", "name": "共振屏障", "prompt": "concentric humming cyan force fields rippling around a soldier, each ring rotating at different speeds, harmonic resonance" },
     { "id": "absolute_zero", "name": "绝对零度", "prompt": "a sweeping cryogenic mist emerging from a hexagonal cyan shield, freezing the air solid in glowing ice geometry, frost crystals spreading" },
-    { "id": "shield_slam", "name": "盾击", "prompt": "a soldier ramming a hexagonal cyan energy shield forward into an alien target, kinetic shockwave on impact, glowing impact ring" },
+    { "id": "shield_slam", "name": "盾击", "prompt": "a soldier in a heavy forward stance, hexagonal cyan energy shield extended forward unleashing a kinetic shockwave, bright concentric impact rings rippling outward" },
     { "id": "mass_driver", "name": "质量驱动炮", "prompt": "a soldier firing a kinetic mass driver cannon mounted on his shoulder pauldron, glowing cyan slug streaking through the air, recoil fume" },
-    { "id": "field_spear", "name": "力场标枪", "prompt": "a soldier hurling a glowing cyan force-field spear that pierces an alien biomech and pins it to the wall, runic energy trails" },
+    { "id": "field_spear", "name": "力场标枪", "prompt": "a glowing cyan force-field spear streaking mid-flight through dark space, runic energy contrails, soldier silhouette in mid-throw stance behind it" },
 
     { "id": "combat_drone", "name": "战斗无人机", "prompt": "a sleek angular human combat drone with cyan thrusters and a charged-up rail rifle, hovering ready, dark hangar" },
     { "id": "guardian_drone", "name": "护卫无人机", "prompt": "a stocky shield-bearing human guardian drone projecting a hexagonal forcefield, hovering protectively" },
