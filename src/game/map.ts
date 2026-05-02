@@ -1,6 +1,6 @@
-import type { CardDef, EnemyDef, MapNode, NodeType } from "./types";
+import type { CardDef, EnemyDef, MapNode, NodeType, Rarity } from "./types";
 import { ENEMIES } from "./enemies";
-import { CARDS, REWARD_POOL_IDS } from "./cards";
+import { CARDS, REWARD_POOL_IDS, cardsByRarity } from "./cards";
 import { getAct, pickRewardArchetype } from "./acts";
 
 // === Branching map generation ===
@@ -141,19 +141,55 @@ export function pickEncounter(node: MapNode): EnemyDef[] {
   return [{ ...ENEMIES[a] }];
 }
 
-export function rollRewardCards(count = 3): CardDef[] {
-  // Bias rewards toward a single archetype this roll.
+// Rarity weights per node tier.
+type Tier = "battle" | "elite" | "boss";
+const TIER_WEIGHTS: Record<Tier, [number, number, number]> = {
+  // [common, uncommon, rare]
+  battle: [0.6, 0.37, 0.03],
+  elite: [0.3, 0.5, 0.2],
+  boss: [0, 0, 1],
+};
+
+function pickRarity(tier: Tier): Rarity {
+  const [c, u] = TIER_WEIGHTS[tier];
+  const r = Math.random();
+  if (r < c) return "common";
+  if (r < c + u) return "uncommon";
+  return "rare";
+}
+
+export function rollRewardCards(count = 3, tier: Tier = "battle"): CardDef[] {
   const focus = pickRewardArchetype();
-  const focused = REWARD_POOL_IDS.filter(
-    (id) => CARDS[id]?.archetype === focus,
-  );
-  const fallback = REWARD_POOL_IDS;
-  const pool: string[] = focused.length >= count ? [...focused] : [...fallback];
   const picks: CardDef[] = [];
-  for (let i = 0; i < count && pool.length > 0; i++) {
-    const idx = Math.floor(Math.random() * pool.length);
-    const id = pool.splice(idx, 1)[0];
+  const taken = new Set<string>();
+
+  // Drone archetype: guarantee at least 1 summon card (common-tier base drone)
+  // so drone synergy cards aren't dead in hand.
+  if (focus === "drone" && tier !== "boss") {
+    const summons = REWARD_POOL_IDS.filter(
+      (id) => CARDS[id].effect.summon && CARDS[id].rarity === "common",
+    );
+    if (summons.length > 0) {
+      const id = summons[Math.floor(Math.random() * summons.length)];
+      picks.push({ ...CARDS[id] });
+      taken.add(id);
+    }
+  }
+
+  while (picks.length < count) {
+    const rarity = pickRarity(tier);
+    let pool = cardsByRarity(rarity).filter((id) => !taken.has(id));
+    // Bias toward focus archetype if available.
+    const focused = pool.filter((id) => CARDS[id].archetype === focus);
+    if (focused.length > 0 && Math.random() < 0.7) pool = focused;
+    if (pool.length === 0) {
+      // fallback to any unpicked card
+      pool = REWARD_POOL_IDS.filter((id) => !taken.has(id));
+      if (pool.length === 0) break;
+    }
+    const id = pool[Math.floor(Math.random() * pool.length)];
     picks.push({ ...CARDS[id] });
+    taken.add(id);
   }
   return picks;
 }

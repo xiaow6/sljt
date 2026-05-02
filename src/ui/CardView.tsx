@@ -18,9 +18,10 @@ export function CardView({ card, playable = true, selected, onClick, small }: Pr
         : "card-power";
   const [imgOk, setImgOk] = useState(true);
   const showImg = !!card.art && imgOk;
+  const rarityClass = card.rarity ? `card-rarity-${card.rarity}` : "";
   return (
     <div
-      className={`card ${typeColor} ${playable ? "" : "card-unplayable"} ${
+      className={`card ${typeColor} ${rarityClass} ${playable ? "" : "card-unplayable"} ${
         selected ? "card-selected" : ""
       } ${small ? "card-small" : ""}`}
       onClick={onClick}

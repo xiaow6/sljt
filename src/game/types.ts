@@ -3,6 +3,7 @@
 export type CardType = "attack" | "skill" | "power";
 export type CardTarget = "enemy" | "self" | "all_enemies" | "none";
 export type Archetype = "neutral" | "berserk" | "aegis" | "drone" | "cyber";
+export type Rarity = "common" | "uncommon" | "rare";
 
 export interface CardEffect {
   damage?: number;
@@ -38,15 +39,23 @@ export interface CardDef {
   exhaust?: boolean;
   upgraded?: boolean;
   archetype?: Archetype;
+  rarity?: Rarity;
 }
 
-export type IntentKind = "attack" | "block" | "buff" | "debuff" | "unknown";
-// Buff intent text codes the effect via the value: positive = strength gain.
+export type IntentKind =
+  | "attack"
+  | "block"
+  | "buff"
+  | "debuff"
+  | "special"
+  | "unknown";
 export interface Intent {
   kind: IntentKind;
   value?: number;
   hits?: number;
   text?: string;
+  // Identifier used by engine to dispatch unique boss mechanics.
+  special?: string;
 }
 
 export interface EnemyDef {

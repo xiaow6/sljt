@@ -1,8 +1,9 @@
 import type { CardDef } from "./types";
 
-// 61 unique cards across 4 archetypes + neutral.
+// 61 cards across 4 archetypes. Tagged by rarity.
+// Common: starter / fodder. Uncommon: mid-tier. Rare: build-defining / finishers.
 export const CARDS: Record<string, CardDef> = {
-  // ===== NEUTRAL (10) =====
+  // ===== NEUTRAL =====
   laser_shot: {
     id: "laser_shot",
     name: "激光射击",
@@ -13,6 +14,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/laser_shot.png",
     effect: { damage: 6 },
     archetype: "neutral",
+    rarity: "common",
   },
   energy_shield: {
     id: "energy_shield",
@@ -20,10 +22,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "skill",
     target: "self",
-    description: "获得 5 点格挡。",
+    description: "获得 6 点格挡。",
     art: "cards/energy_shield.png",
-    effect: { block: 5 },
+    effect: { block: 6 },
     archetype: "neutral",
+    rarity: "common",
   },
   tactical_retreat: {
     id: "tactical_retreat",
@@ -35,6 +38,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/tactical_retreat.png",
     effect: { block: 8, draw: 1 },
     archetype: "neutral",
+    rarity: "common",
   },
   emergency_repair: {
     id: "emergency_repair",
@@ -42,10 +46,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 0,
     type: "skill",
     target: "self",
-    description: "失去 2 点 HP,获得 3 点充能。",
+    description: "失去 2 点 HP,获得 4 点充能。",
     art: "cards/emergency_repair.png",
-    effect: { hpCost: 2, charge: 3 },
+    effect: { hpCost: 2, charge: 4 },
     archetype: "neutral",
+    rarity: "common",
   },
   weakness_analysis: {
     id: "weakness_analysis",
@@ -53,10 +58,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 0,
     type: "skill",
     target: "enemy",
-    description: "施加 2 层易伤。",
+    description: "施加 3 层易伤。",
     art: "cards/weakness_analysis.png",
-    effect: { vulnerable: 2 },
+    effect: { vulnerable: 3 },
     archetype: "neutral",
+    rarity: "common",
   },
   data_scan: {
     id: "data_scan",
@@ -68,6 +74,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/data_scan.png",
     effect: { custom: "data_scan" },
     archetype: "neutral",
+    rarity: "uncommon",
   },
   tactical_ai: {
     id: "tactical_ai",
@@ -79,6 +86,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/tactical_ai.png",
     effect: { custom: "tactical_ai" },
     archetype: "neutral",
+    rarity: "rare",
   },
   nano_repair: {
     id: "nano_repair",
@@ -86,10 +94,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "power",
     target: "self",
-    description: "能力。回合结束治疗 1 HP。",
+    description: "能力。回合结束治疗 2 HP。",
     art: "cards/nano_repair.png",
     effect: { custom: "nano_repair" },
     archetype: "neutral",
+    rarity: "uncommon",
   },
   energy_recycle: {
     id: "energy_recycle",
@@ -101,6 +110,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/energy_recycle.png",
     effect: { draw: 1 },
     archetype: "neutral",
+    rarity: "common",
   },
   overload_start: {
     id: "overload_start",
@@ -108,23 +118,25 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "skill",
     target: "self",
-    description: "获得 2 点充能,获得 3 点格挡。",
+    description: "获得 3 点充能,获得 4 点格挡。",
     art: "cards/overload_start.png",
-    effect: { charge: 2, block: 3 },
+    effect: { charge: 3, block: 4 },
     archetype: "neutral",
+    rarity: "uncommon",
   },
 
-  // ===== BERSERK REACTOR (12) =====
+  // ===== BERSERK REACTOR =====
   med_bay: {
     id: "med_bay",
     name: "医疗舱",
     cost: 1,
     type: "skill",
     target: "self",
-    description: "治疗 12 点 HP,抽 1 张牌。",
+    description: "治疗 14 点 HP,抽 1 张牌。",
     art: "cards/med_bay.png",
-    effect: { heal: 12, draw: 1 },
+    effect: { heal: 14, draw: 1 },
     archetype: "berserk",
+    rarity: "uncommon",
   },
   blood_fuel: {
     id: "blood_fuel",
@@ -132,10 +144,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 0,
     type: "skill",
     target: "self",
-    description: "失去 3 点 HP,本回合获得 1 点能量。",
+    description: "失去 3 点 HP,本回合获得 2 点能量。",
     art: "cards/blood_fuel.png",
-    effect: { hpCost: 3, bonusEnergy: 1 },
+    effect: { hpCost: 3, bonusEnergy: 2 },
     archetype: "berserk",
+    rarity: "common",
   },
   bio_link: {
     id: "bio_link",
@@ -147,6 +160,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/bio_link.png",
     effect: { hpCost: 5, doubleNextAttack: true },
     archetype: "berserk",
+    rarity: "uncommon",
   },
   reactor_overclock: {
     id: "reactor_overclock",
@@ -154,10 +168,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "power",
     target: "self",
-    description: "能力。每回合开始获得 2 充能,失去 2 HP。",
+    description: "能力。每回合开始获得 3 充能,失去 2 HP。",
     art: "cards/reactor_overclock.png",
     effect: { custom: "reactor_overclock" },
     archetype: "berserk",
+    rarity: "rare",
   },
   plasma_strike: {
     id: "plasma_strike",
@@ -165,10 +180,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "attack",
     target: "enemy",
-    description: "造成 8 点伤害。消耗 3 充能,则额外造成 8 点伤害。",
+    description: "造成 10 点伤害。消耗 3 充能,则额外造成 12 点伤害。",
     art: "cards/plasma_strike.png",
     effect: { custom: "plasma_strike" },
     archetype: "berserk",
+    rarity: "uncommon",
   },
   orbital_cannon: {
     id: "orbital_cannon",
@@ -176,10 +192,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 3,
     type: "attack",
     target: "enemy",
-    description: "造成等同于「充能 × 2」的伤害,消耗所有充能。",
+    description: "造成等同于「充能 × 3」的伤害,消耗所有充能。",
     art: "cards/orbital_cannon.png",
     effect: { custom: "orbital_cannon" },
     archetype: "berserk",
+    rarity: "rare",
   },
   singularity_bomb: {
     id: "singularity_bomb",
@@ -187,11 +204,12 @@ export const CARDS: Record<string, CardDef> = {
     cost: "X",
     type: "attack",
     target: "all_enemies",
-    description: "对所有敌人造成 X×6 伤害,消耗 X×3 充能。消耗。",
+    description: "对所有敌人造成 X×8 伤害,消耗 X×3 充能。消耗。",
     art: "cards/singularity_bomb.png",
     effect: { custom: "singularity_bomb" },
     exhaust: true,
     archetype: "berserk",
+    rarity: "rare",
   },
   reverse_transfusion: {
     id: "reverse_transfusion",
@@ -199,10 +217,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 0,
     type: "skill",
     target: "self",
-    description: "失去 2 点 HP,获得 5 点充能。",
+    description: "失去 3 点 HP,获得 6 点充能。",
     art: "cards/reverse_transfusion.png",
-    effect: { hpCost: 2, charge: 5 },
+    effect: { hpCost: 3, charge: 6 },
     archetype: "berserk",
+    rarity: "uncommon",
   },
   overload_discharge: {
     id: "overload_discharge",
@@ -210,10 +229,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "attack",
     target: "all_enemies",
-    description: "对所有敌人造成「当前充能/2」点伤害,消耗一半充能。",
+    description: "消耗 5 充能,对所有敌人造成 16 伤害。",
     art: "cards/overload_discharge.png",
     effect: { custom: "overload_discharge" },
     archetype: "berserk",
+    rarity: "uncommon",
   },
   doomsday_protocol: {
     id: "doomsday_protocol",
@@ -221,10 +241,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 3,
     type: "attack",
     target: "enemy",
-    description: "造成 12 点伤害,失去 5 HP,获得 5 充能。",
+    description: "造成 18 点伤害,失去 5 HP,获得 6 充能。",
     art: "cards/doomsday_protocol.png",
-    effect: { damage: 12, hpCost: 5, charge: 5 },
+    effect: { damage: 18, hpCost: 5, charge: 6 },
     archetype: "berserk",
+    rarity: "rare",
   },
   nuclear_meltdown: {
     id: "nuclear_meltdown",
@@ -232,10 +253,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 3,
     type: "power",
     target: "self",
-    description: "能力。每回合开始获得 3 充能,失去 3 HP。",
+    description: "能力。每回合开始获得 4 充能,失去 3 HP。",
     art: "cards/nuclear_meltdown.png",
     effect: { custom: "nuclear_meltdown" },
     archetype: "berserk",
+    rarity: "rare",
   },
   phoenix_protocol: {
     id: "phoenix_protocol",
@@ -243,13 +265,14 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "power",
     target: "self",
-    description: "能力。本场战斗第一次 HP < 30% 时,治疗 25 HP。",
+    description: "能力。本场战斗第一次 HP < 30% 时,治疗 30 HP。",
     art: "cards/phoenix_protocol.png",
     effect: { custom: "phoenix_protocol" },
     archetype: "berserk",
+    rarity: "rare",
   },
 
-  // ===== AEGIS MATRIX (12) =====
+  // ===== AEGIS MATRIX =====
   metalize: {
     id: "metalize",
     name: "金属化",
@@ -260,6 +283,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/metalize.png",
     effect: { custom: "metalize" },
     archetype: "aegis",
+    rarity: "rare",
   },
   bounce_field: {
     id: "bounce_field",
@@ -267,10 +291,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "skill",
     target: "self",
-    description: "获得 5 格挡。下一次受到攻击时,反弹 50% 伤害。",
+    description: "获得 8 格挡。下次受到攻击时反弹 50% 伤害。",
     art: "cards/bounce_field.png",
-    effect: { block: 5, custom: "bounce_field" },
+    effect: { block: 8, custom: "bounce_field" },
     archetype: "aegis",
+    rarity: "uncommon",
   },
   magnetic_storm: {
     id: "magnetic_storm",
@@ -278,10 +303,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "skill",
     target: "self",
-    description: "获得 10 格挡,对所有敌人造成 4 伤害。",
+    description: "获得 12 格挡,对所有敌人造成 6 伤害。",
     art: "cards/magnetic_storm.png",
-    effect: { block: 10, custom: "magnetic_storm" },
+    effect: { block: 12, custom: "magnetic_storm" },
     archetype: "aegis",
+    rarity: "uncommon",
   },
   reactive_armor: {
     id: "reactive_armor",
@@ -289,10 +315,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "power",
     target: "self",
-    description: "能力。每次受到攻击,获得 2 格挡。",
+    description: "能力。每次受到攻击,获得 3 格挡。",
     art: "cards/reactive_armor.png",
     effect: { custom: "reactive_armor" },
     archetype: "aegis",
+    rarity: "rare",
   },
   energy_armor: {
     id: "energy_armor",
@@ -300,10 +327,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "skill",
     target: "self",
-    description: "获得 4 点护甲(回合结束不清零)。",
+    description: "获得 6 点护甲(回合结束不清零)。",
     art: "cards/energy_armor.png",
-    effect: { armor: 4 },
+    effect: { armor: 6 },
     archetype: "aegis",
+    rarity: "uncommon",
   },
   field_charge: {
     id: "field_charge",
@@ -311,10 +339,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "skill",
     target: "self",
-    description: "下一回合开始时,获得 8 点格挡。",
+    description: "下一回合开始时,获得 10 点格挡。",
     art: "cards/field_charge.png",
     effect: { custom: "field_charge" },
     archetype: "aegis",
+    rarity: "common",
   },
   deflection_strike: {
     id: "deflection_strike",
@@ -326,6 +355,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/deflection_strike.png",
     effect: { custom: "deflection_strike" },
     archetype: "aegis",
+    rarity: "uncommon",
   },
   charge_absorb: {
     id: "charge_absorb",
@@ -333,10 +363,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "power",
     target: "self",
-    description: "能力。受到攻击但未破防时,获得 2 充能。",
+    description: "能力。受到攻击但未破防时,获得 3 充能。",
     art: "cards/charge_absorb.png",
     effect: { custom: "charge_absorb" },
     archetype: "aegis",
+    rarity: "uncommon",
   },
   overcharge_shield: {
     id: "overcharge_shield",
@@ -344,10 +375,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "skill",
     target: "self",
-    description: "获得 12 格挡。本回合获得的充能 ×2。",
+    description: "获得 14 格挡。本回合获得的充能 ×2。",
     art: "cards/overcharge_shield.png",
-    effect: { block: 12, custom: "overcharge_shield" },
+    effect: { block: 14, custom: "overcharge_shield" },
     archetype: "aegis",
+    rarity: "uncommon",
   },
   iron_wall: {
     id: "iron_wall",
@@ -355,10 +387,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 0,
     type: "skill",
     target: "self",
-    description: "获得 3 格挡。若你已有 ≥ 10 格挡,改为获得 6 格挡。",
+    description: "获得 5 格挡。若你已有 ≥ 10 格挡,改为获得 10 格挡。",
     art: "cards/iron_wall.png",
     effect: { custom: "iron_wall" },
     archetype: "aegis",
+    rarity: "common",
   },
   resonance_barrier: {
     id: "resonance_barrier",
@@ -366,10 +399,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 3,
     type: "power",
     target: "self",
-    description: "能力。回合开始时若格挡 ≥ 15,抽 1 张牌。",
+    description: "能力。回合开始时若格挡 ≥ 15,抽 2 张牌。",
     art: "cards/resonance_barrier.png",
     effect: { custom: "resonance_barrier" },
     archetype: "aegis",
+    rarity: "rare",
   },
   absolute_zero: {
     id: "absolute_zero",
@@ -377,23 +411,25 @@ export const CARDS: Record<string, CardDef> = {
     cost: 3,
     type: "attack",
     target: "enemy",
-    description: "施加 1 易伤。若你有 ≥ 20 格挡,造成 25 伤害。",
+    description: "施加 2 易伤。若你有 ≥ 20 格挡,造成 35 伤害。",
     art: "cards/absolute_zero.png",
-    effect: { vulnerable: 1, custom: "absolute_zero" },
+    effect: { vulnerable: 2, custom: "absolute_zero" },
     archetype: "aegis",
+    rarity: "rare",
   },
 
-  // ===== DRONE SWARM (15) =====
+  // ===== DRONE SWARM =====
   combat_drone: {
     id: "combat_drone",
     name: "战斗无人机",
     cost: 1,
     type: "skill",
     target: "self",
-    description: "召唤一架战斗无人机(每回合开始造成 4 伤害)。",
+    description: "召唤一架战斗无人机(每回合开始造成 5 伤害)。",
     art: "cards/combat_drone.png",
     effect: { summon: "combat" },
     archetype: "drone",
+    rarity: "common",
   },
   guardian_drone: {
     id: "guardian_drone",
@@ -401,10 +437,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "skill",
     target: "self",
-    description: "召唤一架护卫无人机(每回合开始 +3 格挡)。",
+    description: "召唤一架护卫无人机(每回合开始 +4 格挡)。",
     art: "cards/guardian_drone.png",
     effect: { summon: "guardian" },
     archetype: "drone",
+    rarity: "common",
   },
   repair_drone: {
     id: "repair_drone",
@@ -412,10 +449,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "skill",
     target: "self",
-    description: "召唤一架修复无人机(每回合开始 +2 HP)。",
+    description: "召唤一架修复无人机(每回合开始 +3 HP)。",
     art: "cards/repair_drone.png",
     effect: { summon: "repair" },
     archetype: "drone",
+    rarity: "common",
   },
   scout_drone: {
     id: "scout_drone",
@@ -427,6 +465,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/scout_drone.png",
     effect: { summon: "scout" },
     archetype: "drone",
+    rarity: "common",
   },
   swarm_protocol: {
     id: "swarm_protocol",
@@ -438,6 +477,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/swarm_protocol.png",
     effect: { custom: "swarm_protocol" },
     archetype: "drone",
+    rarity: "rare",
   },
   drone_charge: {
     id: "drone_charge",
@@ -449,6 +489,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/drone_charge.png",
     effect: { custom: "drone_charge" },
     archetype: "drone",
+    rarity: "uncommon",
   },
   production_line: {
     id: "production_line",
@@ -460,6 +501,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/production_line.png",
     effect: { custom: "production_line" },
     archetype: "drone",
+    rarity: "rare",
   },
   swarm_strike: {
     id: "swarm_strike",
@@ -467,10 +509,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "attack",
     target: "enemy",
-    description: "造成 3 伤害,无人机数量 × 倍。",
+    description: "造成 5 × 无人机数量 的伤害。",
     art: "cards/swarm_strike.png",
     effect: { custom: "swarm_strike" },
     archetype: "drone",
+    rarity: "uncommon",
   },
   overclock_drone: {
     id: "overclock_drone",
@@ -482,6 +525,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/overclock_drone.png",
     effect: { custom: "overclock_drone" },
     archetype: "drone",
+    rarity: "uncommon",
   },
   ai_hub: {
     id: "ai_hub",
@@ -489,10 +533,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "power",
     target: "self",
-    description: "能力。所有无人机的行动效果 +1。",
+    description: "能力。所有无人机的行动效果 +2。",
     art: "cards/ai_hub.png",
     effect: { custom: "ai_hub" },
     archetype: "drone",
+    rarity: "rare",
   },
   drone_recycle: {
     id: "drone_recycle",
@@ -504,6 +549,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/drone_recycle.png",
     effect: { custom: "drone_recycle" },
     archetype: "drone",
+    rarity: "uncommon",
   },
   swarm_nuke: {
     id: "swarm_nuke",
@@ -511,11 +557,12 @@ export const CARDS: Record<string, CardDef> = {
     cost: 3,
     type: "attack",
     target: "all_enemies",
-    description: "消耗所有无人机,对所有敌人造成「数量 × 8」伤害。消耗。",
+    description: "消耗所有无人机,对所有敌人造成「数量 × 12」伤害。消耗。",
     art: "cards/swarm_nuke.png",
     effect: { custom: "swarm_nuke" },
     exhaust: true,
     archetype: "drone",
+    rarity: "rare",
   },
   prefab_drone: {
     id: "prefab_drone",
@@ -528,6 +575,7 @@ export const CARDS: Record<string, CardDef> = {
     effect: { charge: 1, custom: "prefab_drone" },
     exhaust: true,
     archetype: "drone",
+    rarity: "common",
   },
   swarm_barrage: {
     id: "swarm_barrage",
@@ -535,10 +583,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "attack",
     target: "enemy",
-    description: "造成 4 × 战斗无人机数量 的伤害。",
+    description: "造成 6 × 战斗无人机数量 的伤害。",
     art: "cards/swarm_barrage.png",
     effect: { custom: "swarm_barrage" },
     archetype: "drone",
+    rarity: "uncommon",
   },
   swarm_heart: {
     id: "swarm_heart",
@@ -550,19 +599,21 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/swarm_heart.png",
     effect: { custom: "swarm_heart" },
     archetype: "drone",
+    rarity: "rare",
   },
 
-  // ===== CYBERWAR (12) =====
+  // ===== CYBERWAR =====
   hack_protocol: {
     id: "hack_protocol",
     name: "入侵协议",
     cost: 1,
     type: "skill",
     target: "enemy",
-    description: "施加 2 层黑客。",
+    description: "施加 3 层黑客。",
     art: "cards/hack_protocol.png",
-    effect: { hack: 2 },
+    effect: { hack: 3 },
     archetype: "cyber",
+    rarity: "common",
   },
   logic_bomb: {
     id: "logic_bomb",
@@ -570,10 +621,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "attack",
     target: "enemy",
-    description: "造成 6 伤害,施加 3 黑客。",
+    description: "造成 10 伤害,施加 3 黑客。",
     art: "cards/logic_bomb.png",
-    effect: { damage: 6, hack: 3 },
+    effect: { damage: 10, hack: 3 },
     archetype: "cyber",
+    rarity: "uncommon",
   },
   ice_breaker: {
     id: "ice_breaker",
@@ -585,6 +637,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/ice_breaker.png",
     effect: { hack: 2, draw: 1 },
     archetype: "cyber",
+    rarity: "common",
   },
   data_flood: {
     id: "data_flood",
@@ -596,6 +649,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/data_flood.png",
     effect: { custom: "data_flood" },
     archetype: "cyber",
+    rarity: "rare",
   },
   overload_intrusion: {
     id: "overload_intrusion",
@@ -603,10 +657,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "skill",
     target: "enemy",
-    description: "施加 1 黑客;若目标黑客 ≥ 3,改为施加 3 黑客。",
+    description: "施加 2 黑客;若目标黑客 ≥ 3,改为施加 5 黑客。",
     art: "cards/overload_intrusion.png",
     effect: { custom: "overload_intrusion" },
     archetype: "cyber",
+    rarity: "uncommon",
   },
   ai_infiltration: {
     id: "ai_infiltration",
@@ -618,6 +673,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/ai_infiltration.png",
     effect: { hack: 5 },
     archetype: "cyber",
+    rarity: "rare",
   },
   circuit_break: {
     id: "circuit_break",
@@ -625,10 +681,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 1,
     type: "skill",
     target: "enemy",
-    description: "施加 2 易伤,获得 1 点信息流。",
+    description: "施加 2 易伤,获得 2 点信息流。",
     art: "cards/circuit_break.png",
-    effect: { vulnerable: 2, data: 1 },
+    effect: { vulnerable: 2, data: 2 },
     archetype: "cyber",
+    rarity: "common",
   },
   virus_deploy: {
     id: "virus_deploy",
@@ -640,6 +697,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/virus_deploy.png",
     effect: { custom: "virus_deploy" },
     archetype: "cyber",
+    rarity: "rare",
   },
   data_compile: {
     id: "data_compile",
@@ -647,10 +705,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "attack",
     target: "enemy",
-    description: "消耗所有信息流,每点造成 2 伤害。",
+    description: "消耗所有信息流,每点造成 3 伤害。",
     art: "cards/data_compile.png",
     effect: { custom: "data_compile" },
     archetype: "cyber",
+    rarity: "uncommon",
   },
   mind_hijack: {
     id: "mind_hijack",
@@ -663,6 +722,7 @@ export const CARDS: Record<string, CardDef> = {
     effect: { custom: "mind_hijack" },
     exhaust: true,
     archetype: "cyber",
+    rarity: "rare",
   },
   protocol_override: {
     id: "protocol_override",
@@ -670,10 +730,11 @@ export const CARDS: Record<string, CardDef> = {
     cost: 2,
     type: "attack",
     target: "enemy",
-    description: "造成 8 伤害。若目标有黑客层数,造成「黑客 × 3」额外伤害。",
+    description: "造成 10 伤害。若目标有黑客层数,造成「黑客 × 4」额外伤害。",
     art: "cards/protocol_override.png",
     effect: { custom: "protocol_override" },
     archetype: "cyber",
+    rarity: "rare",
   },
   quantum_encrypt: {
     id: "quantum_encrypt",
@@ -685,6 +746,7 @@ export const CARDS: Record<string, CardDef> = {
     art: "cards/quantum_encrypt.png",
     effect: { custom: "quantum_encrypt" },
     archetype: "cyber",
+    rarity: "common",
   },
 };
 
@@ -697,11 +759,17 @@ export function makeStartingDeck(): CardDef[] {
   return deck;
 }
 
-// Reward pool: everything not in starter, weighted by archetype.
+const STARTER_IDS = new Set([
+  "laser_shot",
+  "energy_shield",
+  "tactical_retreat",
+  "emergency_repair",
+]);
+
 export const REWARD_POOL_IDS = Object.keys(CARDS).filter(
-  (id) =>
-    id !== "laser_shot" &&
-    id !== "energy_shield" &&
-    id !== "tactical_retreat" &&
-    id !== "emergency_repair",
+  (id) => !STARTER_IDS.has(id),
 );
+
+export function cardsByRarity(rarity: "common" | "uncommon" | "rare"): string[] {
+  return REWARD_POOL_IDS.filter((id) => CARDS[id].rarity === rarity);
+}

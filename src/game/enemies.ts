@@ -70,8 +70,13 @@ export const ENEMIES: Record<string, EnemyDef> = {
     isBoss: true,
     art: "enemies/weaver.png",
     pattern: (turn) => {
-      // Boss escalation: every 4 turns, buff +2 strength.
-      if (turn > 0 && turn % 4 === 0) return { kind: "buff", value: 2, text: "时之力 (强度 +2)" };
+      // Signature: every 4 turns, "时空回溯" — discard 2 random hand cards + 2 weak.
+      if (turn > 0 && turn % 4 === 0)
+        return {
+          kind: "special",
+          special: "weaver_rewind",
+          text: "时空回溯 (弃 2 张 + 虚弱 2)",
+        };
       const r = turn % 5;
       if (r === 0) return { kind: "debuff", value: 3, text: "撕裂时间 (易伤 3)" };
       if (r === 1) return atk(12);
@@ -114,13 +119,18 @@ export const ENEMIES: Record<string, EnemyDef> = {
     isBoss: true,
     art: "enemies/gravity_warden.png",
     pattern: (turn) => {
-      // Escalation: every 3 turns, +2 strength buff.
-      if (turn > 0 && turn % 3 === 0) return { kind: "buff", value: 2, text: "重力增幅 (强度 +2)" };
+      // Signature: every 3 turns, "重力压缩" — apply 2 vuln + 2 weak (compound).
+      if (turn > 0 && turn % 3 === 0)
+        return {
+          kind: "special",
+          special: "warden_compress",
+          text: "重力压缩 (易伤 2 + 虚弱 2)",
+        };
       const r = turn % 5;
       if (r === 0) return atk(16);
       if (r === 1) return atk(8, 2);
       if (r === 2) return { kind: "debuff", value: 2, text: "引力压制 (易伤 2)" };
-      if (r === 3) return blk(15);
+      if (r === 3) return blk(20);
       return atk(24, 1, "奇点撞击 24");
     },
   },
@@ -172,15 +182,20 @@ export const ENEMIES: Record<string, EnemyDef> = {
     isBoss: true,
     art: "enemies/council_speaker.png",
     pattern: (turn) => {
-      // Escalation: every 3 turns, +3 strength buff.
-      if (turn > 0 && turn % 3 === 0) return { kind: "buff", value: 3, text: "议会权能 (强度 +3)" };
+      // Signature: every 3 turns, "议会判决" — damage based on player hand size.
+      if (turn > 0 && turn % 3 === 0)
+        return {
+          kind: "special",
+          special: "council_judgment",
+          text: "议会判决 (5 × 手牌数 伤害)",
+        };
       const r = turn % 6;
       if (r === 0) return { kind: "debuff", value: 4, text: "议会判决 (易伤 4)" };
       if (r === 1) return atk(18);
       if (r === 2) return atk(10, 2);
-      if (r === 3) return blk(18);
+      if (r === 3) return blk(20);
       if (r === 4) return atk(7, 4, "符文齐射 7×4");
-      return atk(28, 1, "终审 28");
+      return atk(30, 1, "终审 30");
     },
   },
 
@@ -191,17 +206,29 @@ export const ENEMIES: Record<string, EnemyDef> = {
     hp: 240,
     isBoss: true,
     art: "enemies/precursor_heart.png",
+    // Phase signature: every 4 turns "原初再生" — heal 20. At low HP, every 2 turns
+    // applies "时空崩塌" (vulnerable + weak).
     pattern: (turn) => {
-      // Final boss escalation: every 2 turns +3 strength.
-      if (turn > 0 && turn % 2 === 0) return { kind: "buff", value: 3, text: "原初心搏 (强度 +3)" };
+      if (turn > 0 && turn % 4 === 0)
+        return {
+          kind: "special",
+          special: "heart_regen",
+          text: "原初再生 (治疗 20)",
+        };
+      if (turn > 0 && turn % 5 === 0)
+        return {
+          kind: "special",
+          special: "heart_collapse",
+          text: "时空崩塌 (易伤 3 + 虚弱 3)",
+        };
       const r = turn % 7;
       if (r === 0) return { kind: "debuff", value: 5, text: "源初腐化 (易伤 5)" };
       if (r === 1) return atk(20);
       if (r === 2) return atk(10, 3, "心搏冲击 10×3");
-      if (r === 3) return blk(25);
+      if (r === 3) return blk(30);
       if (r === 4) return atk(15, 2);
-      if (r === 5) return { kind: "debuff", value: 5, text: "时空崩塌 (易伤 5)" };
-      return atk(40, 1, "存在抹消 40");
+      if (r === 6) return atk(8, 4, "终焉齐射 8×4");
+      return atk(45, 1, "存在抹消 45");
     },
   },
 };

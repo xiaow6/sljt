@@ -82,6 +82,8 @@ export function BattleScreen() {
   const [flashKey, setFlashKey] = useState(0);
   const [playingCardIdx, setPlayingCardIdx] = useState<number | null>(null);
   const [effects, setEffects] = useState<PlayEffect[]>([]);
+  const [discarding, setDiscarding] = useState(false);
+  const [drawAnimKey, setDrawAnimKey] = useState(0);
 
   // DOM refs for position lookups.
   const playerPortraitRef = useRef<HTMLDivElement>(null);
@@ -179,9 +181,11 @@ export function BattleScreen() {
     }
 
     // Turn changed → enemy turn just ran. Trigger lunge on attacker enemies even
-    // if the player blocked everything (no HP delta).
+    // if the player blocked everything (no HP delta), and play the deal-in
+    // animation for the freshly drawn hand.
     if (c.turn > prev.turn) {
       setLungeKey((k) => k + 1);
+      setDrawAnimKey((k) => k + 1);
     }
 
     prevHpRef.current = {
@@ -459,29 +463,57 @@ export function BattleScreen() {
           </div>
         </div>
 
-        <div className="hand">
-          {c.hand.map((card, i) => {
-            const cost = card.cost === "X" ? 0 : card.cost;
-            const playable = player.energy >= cost;
-            const isPlaying = playingCardIdx === i;
-            return (
-              <div key={i} className={isPlaying ? "card-playing" : ""}>
-                <CardView
-                  card={card}
-                  playable={playable}
-                  selected={selectedCardIdx === i}
-                  onClick={() => clickCard(i)}
-                />
-              </div>
-            );
-          })}
+        <div className="hand-area">
+          <div className="pile pile-draw" title={`抽牌堆 ${c.draw.length} 张`}>
+            <div className="pile-stack">
+              <div className="card-back" />
+              <div className="card-back" />
+              <div className="card-back" />
+            </div>
+            <div className="pile-label">抽牌</div>
+            <div className="pile-count">{c.draw.length}</div>
+          </div>
+          <div className="hand">
+            {c.hand.map((card, i) => {
+              const cost = card.cost === "X" ? 0 : card.cost;
+              const playable = player.energy >= cost;
+              const isPlaying = playingCardIdx === i;
+              const cls = [
+                isPlaying ? "card-playing" : "",
+                discarding ? "card-discarding" : "card-drawn",
+              ]
+                .filter(Boolean)
+                .join(" ");
+              return (
+                <div
+                  key={`${drawAnimKey}-${i}`}
+                  className={cls}
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  <CardView
+                    card={card}
+                    playable={playable}
+                    selected={selectedCardIdx === i}
+                    onClick={() => clickCard(i)}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <div className="pile pile-discard" title={`弃牌堆 ${c.discard.length} 张`}>
+            <div className="pile-stack">
+              {c.discard.length > 0 && <div className="card-back card-back-discard" />}
+              {c.discard.length > 1 && <div className="card-back card-back-discard" />}
+              {c.discard.length > 2 && <div className="card-back card-back-discard" />}
+            </div>
+            <div className="pile-label">弃牌</div>
+            <div className="pile-count">{c.discard.length}</div>
+          </div>
         </div>
 
         <div className="battle-controls">
           <div className="pile-info">
-            <div>抽牌堆: {c.draw.length}</div>
-            <div>弃牌堆: {c.discard.length}</div>
-            <div>消耗堆: {c.exhaust.length}</div>
+            {c.exhaust.length > 0 && <div>消耗 {c.exhaust.length}</div>}
           </div>
           {xCard && (
             <div className="x-cost-picker">
@@ -501,7 +533,18 @@ export function BattleScreen() {
               </button>
             </div>
           )}
-          <button className="btn-end-turn" onClick={() => actions.endTurn()}>
+          <button
+            className="btn-end-turn"
+            disabled={discarding}
+            onClick={() => {
+              if (discarding) return;
+              setDiscarding(true);
+              setTimeout(() => {
+                actions.endTurn();
+                setDiscarding(false);
+              }, 360);
+            }}
+          >
             结束回合
           </button>
         </div>

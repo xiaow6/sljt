@@ -61,6 +61,8 @@ function advanceAct() {
   state.act++;
   state.map = generateActMap(state.act);
   state.currentNodeId = null;
+  // Full heal between acts.
+  state.playerHp = state.playerMaxHp;
   state.screen = "map";
 }
 
@@ -81,7 +83,6 @@ function handleCombatEnd() {
     const isBoss = node?.type === "boss";
     const isElite = node?.type === "elite";
 
-    // Elite reward: card + relic.
     if (isElite) {
       const candidates = ELITE_RELIC_POOL.filter((r) => !state.relics.includes(r));
       pendingRelic = candidates.length > 0 ? pickRandom(candidates) : null;
@@ -89,12 +90,10 @@ function handleCombatEnd() {
       pendingRelic = null;
     }
 
-    // Boss reward: card too, but advance act after.
-    state.rewardCards = rollRewardCards(3);
+    const tier = isBoss ? "boss" : isElite ? "elite" : "battle";
+    state.rewardCards = rollRewardCards(3, tier);
     state.screen = "reward";
-    // Stash a flag for whether this is the boss reward (so we advance act on accept).
     (state as RunState & { bossRewardPending?: boolean }).bossRewardPending = isBoss;
-    // Gold drop
     state.gold += isBoss ? 100 : isElite ? 40 : 15;
   } else if (state.combat.over === "lose") {
     state.screen = "gameover";

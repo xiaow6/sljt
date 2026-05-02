@@ -190,8 +190,8 @@ function applyDamageToPlayer(c: CombatState, raw: number) {
     const ph = c.player.powers.find((p) => p.id === "phoenix_protocol");
     if (ph && !ph.value && c.player.hp > 0 && c.player.hp < c.player.maxHp * 0.3) {
       ph.value = 1; // mark as triggered
-      selfHeal(c, 25);
-      logMsg(c, "凤凰协议触发: 治疗 25 HP。");
+      selfHeal(c, 30);
+      logMsg(c, "凤凰协议触发: 治疗 30 HP。");
     }
     if (c.player.hp <= 0) {
       c.player.hp = 0;
@@ -416,17 +416,17 @@ function resolveEffects(
     }
     case "plasma_strike": {
       if (!target) break;
-      let dmg = 8;
+      let dmg = 10;
       if (c.player.charge >= 3) {
         c.player.charge -= 3;
-        dmg += 8;
+        dmg += 12;
       }
       attackEnemy(c, target, dmg);
       break;
     }
     case "orbital_cannon": {
       if (!target) break;
-      const dmg = c.player.charge * 2;
+      const dmg = c.player.charge * 3;
       c.player.charge = 0;
       attackEnemy(c, target, dmg);
       break;
@@ -434,7 +434,7 @@ function resolveEffects(
     case "singularity_bomb": {
       const charge = Math.min(c.player.charge, xValue * 3);
       const fullPower = charge >= xValue * 3;
-      const dmg = fullPower ? xValue * 6 : Math.floor((xValue * 6) / 2);
+      const dmg = fullPower ? xValue * 8 : Math.floor((xValue * 8) / 2);
       c.player.charge -= charge;
       for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, dmg);
       logMsg(
@@ -444,10 +444,16 @@ function resolveEffects(
       break;
     }
     case "overload_discharge": {
-      const half = Math.floor(c.player.charge / 2);
-      c.player.charge -= half;
-      for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, half);
-      logMsg(c, `过载放电: ${half} AOE。`);
+      // Consume 5 charge for 16 AOE. If insufficient, do half.
+      const cost = 5;
+      if (c.player.charge >= cost) {
+        c.player.charge -= cost;
+        for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, 16);
+        logMsg(c, `过载放电: 16 AOE。`);
+      } else {
+        for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, 8);
+        logMsg(c, `过载放电(能量不足): 8 AOE。`);
+      }
       break;
     }
     case "bounce_field":
@@ -472,7 +478,7 @@ function resolveEffects(
       break;
     case "absolute_zero": {
       if (!target) break;
-      if (c.player.block >= 20) attackEnemy(c, target, 25);
+      if (c.player.block >= 20) attackEnemy(c, target, 35);
       break;
     }
 
@@ -493,7 +499,7 @@ function resolveEffects(
     }
     case "swarm_nuke": {
       const n = c.player.drones.reduce((s, d) => s + d.stacks, 0);
-      const dmg = n * 8;
+      const dmg = n * 12;
       c.player.drones = [];
       for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, dmg);
       logMsg(c, `机群核爆: ${dmg} AOE。`);
@@ -505,7 +511,7 @@ function resolveEffects(
     case "swarm_strike": {
       if (!target) break;
       const n = c.player.drones.reduce((s, d) => s + d.stacks, 0);
-      const dmg = 3 * Math.max(1, n);
+      const dmg = 5 * Math.max(1, n);
       attackEnemy(c, target, dmg);
       break;
     }
@@ -514,19 +520,19 @@ function resolveEffects(
       const combat = c.player.drones
         .filter((d) => d.kind === "combat")
         .reduce((s, d) => s + d.stacks, 0);
-      const dmg = 4 * Math.max(0, combat);
+      const dmg = 6 * Math.max(0, combat);
       attackEnemy(c, target, dmg);
       break;
     }
 
     case "overload_intrusion": {
       if (!target) break;
-      applyHack(c, target, target.hack >= 3 ? 3 : 1);
+      applyHack(c, target, target.hack >= 3 ? 5 : 2);
       break;
     }
     case "data_compile": {
       if (!target) break;
-      const dmg = c.player.data * 2;
+      const dmg = c.player.data * 3;
       c.player.data = 0;
       attackEnemy(c, target, dmg);
       break;
@@ -541,8 +547,8 @@ function resolveEffects(
     }
     case "protocol_override": {
       if (!target) break;
-      const bonus = target.hack * 3;
-      attackEnemy(c, target, 8 + bonus);
+      const bonus = target.hack * 4;
+      attackEnemy(c, target, 10 + bonus);
       break;
     }
     case "quantum_encrypt":
@@ -567,21 +573,21 @@ function attackEnemy(c: CombatState, target: EnemyState, baseDmg: number) {
 }
 
 function runDroneActions(c: CombatState, multiplier = 1) {
-  const aiHub = c.player.powers.find((p) => p.id === "ai_hub") ? 1 : 0;
+  const aiHub = c.player.powers.find((p) => p.id === "ai_hub") ? 2 : 0;
   for (const d of c.player.drones) {
     const overclock = d.overclocked ? 2 : 1;
     const stacks = d.stacks;
     const m = multiplier * overclock * stacks;
     if (d.kind === "combat") {
-      const baseDmg = (4 + aiHub) * m;
+      const baseDmg = (5 + aiHub) * m;
       const alive = aliveEnemies(c);
       if (alive.length > 0) applyDamageToEnemy(c, alive[0], baseDmg);
     } else if (d.kind === "guardian") {
-      c.player.block += (3 + aiHub) * m;
+      c.player.block += (4 + aiHub) * m;
     } else if (d.kind === "repair") {
-      selfHeal(c, (2 + aiHub) * m);
+      selfHeal(c, (3 + aiHub) * m);
     } else if (d.kind === "scout") {
-      drawCards(c, (1 + aiHub) * m);
+      drawCards(c, (1 + (aiHub > 0 ? 1 : 0)) * m);
     }
   }
 }
@@ -597,7 +603,7 @@ export function endTurn(c: CombatState) {
     for (const e of c.enemies) if (e.alive) applyHack(c, e, 1);
   }
   if (c.player.powers.find((p) => p.id === "nano_repair")) {
-    selfHeal(c, 1);
+    selfHeal(c, 2);
   }
 
   if (c.player.vulnerable > 0) c.player.vulnerable--;
@@ -635,14 +641,14 @@ export function endTurn(c: CombatState) {
     c.player.pendingNextTurnBlock = 0;
   }
 
-  // Reactor overclock — start of turn -2HP, +2 charge
+  // Reactor overclock — start of turn +3 charge, -2 HP (rebalanced)
   if (c.player.powers.find((p) => p.id === "reactor_overclock")) {
-    gainCharge(c, 2);
+    gainCharge(c, 3);
     const relics = (c as CombatState & { relics?: string[] }).relics ?? [];
     if (!relics.includes("overload_buffer")) selfHpCost(c, 2);
   }
   if (c.player.powers.find((p) => p.id === "nuclear_meltdown")) {
-    gainCharge(c, 3);
+    gainCharge(c, 4);
     const relics = (c as CombatState & { relics?: string[] }).relics ?? [];
     if (!relics.includes("overload_buffer")) selfHpCost(c, 3);
   }
@@ -652,7 +658,7 @@ export function endTurn(c: CombatState) {
   }
   // resonance_barrier
   if (c.player.powers.find((p) => p.id === "resonance_barrier")) {
-    if (c.player.block >= 15) drawCards(c, 1);
+    if (c.player.block >= 15) drawCards(c, 2);
   }
 
   // Drones act.
@@ -684,7 +690,48 @@ function resolveEnemyIntent(c: CombatState, e: EnemyState) {
     const stacks = it.value ?? (e.def.id === "weaver" ? 3 : 2);
     c.player.vulnerable += stacks;
   } else if (it.kind === "buff") {
-    // Buff value (if any) → strength gain. Bosses use this for escalation.
     e.strength += it.value ?? 2;
+  } else if (it.kind === "special") {
+    runSpecialIntent(c, e, it.special ?? "");
+  }
+}
+
+function runSpecialIntent(c: CombatState, _e: EnemyState, id: string) {
+  switch (id) {
+    case "weaver_rewind": {
+      // Discard 2 random cards from hand + apply 2 weak.
+      for (let i = 0; i < 2 && c.hand.length > 0; i++) {
+        const idx = Math.floor(Math.random() * c.hand.length);
+        const removed = c.hand.splice(idx, 1)[0];
+        if (removed) c.discard.push(removed);
+      }
+      c.player.weak += 2;
+      logMsg(c, "时空回溯: 玩家弃牌 2 张 + 虚弱 2。");
+      break;
+    }
+    case "warden_compress": {
+      c.player.vulnerable += 2;
+      c.player.weak += 2;
+      logMsg(c, "重力压缩: 易伤 +2 / 虚弱 +2。");
+      break;
+    }
+    case "council_judgment": {
+      const dmg = 5 * c.hand.length;
+      applyDamageToPlayer(c, dmg);
+      logMsg(c, `议会判决: 5 × ${c.hand.length} = ${dmg} 伤害。`);
+      break;
+    }
+    case "heart_regen": {
+      const heal = 20;
+      _e.hp = Math.min(_e.maxHp, _e.hp + heal);
+      logMsg(c, `${_e.def.name} 原初再生: 治疗 ${heal} HP。`);
+      break;
+    }
+    case "heart_collapse": {
+      c.player.vulnerable += 3;
+      c.player.weak += 3;
+      logMsg(c, "时空崩塌: 易伤 +3 / 虚弱 +3。");
+      break;
+    }
   }
 }

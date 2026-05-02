@@ -80,5 +80,6 @@ function intentText(it: Intent, playerVulnerable = 0): string {
   if (it.kind === "block") return `🛡 ${it.value}`;
   if (it.kind === "buff") return `↑ ${it.text ?? "强化"}`;
   if (it.kind === "debuff") return `↓ ${it.text ?? "削弱"}`;
+  if (it.kind === "special") return `✦ ${it.text ?? "特殊"}`;
   return "?";
 }
