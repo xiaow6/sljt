@@ -12,6 +12,7 @@ export function newRun(): RunState {
     playerMaxHp: START_HP,
     gold: 0,
     relics: [pickRandom(STARTER_RELIC_POOL)],
+    preloadedHack: 0,
     map: generateMap(),
     currentNode: 0,
     screen: "title",

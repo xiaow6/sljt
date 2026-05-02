@@ -2,37 +2,48 @@
 
 export type CardType = "attack" | "skill" | "power";
 export type CardTarget = "enemy" | "self" | "all_enemies" | "none";
+export type Archetype = "neutral" | "berserk" | "aegis" | "drone" | "cyber";
 
 export interface CardEffect {
-  damage?: number; // damage to target
-  block?: number; // block to self
+  damage?: number;
+  block?: number;
   draw?: number;
-  charge?: number; // gain charge
-  hpCost?: number; // self HP cost (will not reduce HP below 1)
-  heal?: number; // self HP gain (capped at maxHp)
-  vulnerable?: number; // apply vulnerable to target
+  charge?: number;
+  hpCost?: number;
+  heal?: number;
+  vulnerable?: number;
   doubleNextAttack?: boolean;
-  bonusEnergy?: number; // gain energy this turn
-  custom?: string; // identifier for special handling
+  bonusEnergy?: number;
+  // Aegis Matrix
+  armor?: number; // persistent block that does NOT clear at end of turn
+  // Cyberwar
+  hack?: number; // applied to target enemy
+  data?: number; // applied to self
+  // Drone
+  summon?: DroneKind; // type of drone summoned
+  custom?: string;
 }
+
+export type DroneKind = "combat" | "guardian" | "repair" | "scout";
 
 export interface CardDef {
   id: string;
   name: string;
-  cost: number | "X"; // X cost cards consume all energy
+  cost: number | "X";
   type: CardType;
   target: CardTarget;
   description: string;
-  art?: string; // path under /art/cards
+  art?: string;
   effect: CardEffect;
   exhaust?: boolean;
   upgraded?: boolean;
+  archetype?: Archetype;
 }
 
 export type IntentKind = "attack" | "block" | "buff" | "debuff" | "unknown";
 export interface Intent {
   kind: IntentKind;
-  value?: number; // damage or block
+  value?: number;
   hits?: number;
   text?: string;
 }
@@ -54,25 +65,41 @@ export interface EnemyState {
   block: number;
   vulnerable: number;
   weak: number;
+  hack: number; // Cyberwar — at >=5 the enemy skips next turn (consumes 5)
   intent: Intent;
   alive: boolean;
   turn: number;
+  skipNext: boolean; // set by hack threshold
+}
+
+export interface DroneState {
+  kind: DroneKind;
+  // Stack count for swarm_protocol: stacked drones boost effect proportionally.
+  stacks: number;
+  // Per-turn buff from overclock_drone (×2 effects this turn)
+  overclocked: boolean;
 }
 
 export interface PlayerState {
   hp: number;
   maxHp: number;
   block: number;
+  armor: number; // Aegis — persistent block, decays only on direct hit, not turn end
   energy: number;
   maxEnergy: number;
   charge: number;
+  data: number; // Cyberwar player resource
   vulnerable: number;
   weak: number;
   strength: number;
-  // Powers (passive effects from played power cards).
   powers: { id: string; value?: number }[];
-  // Combat-only flags.
   doubleNextAttack: boolean;
+  drones: DroneState[]; // up to 3
+  bounceFieldActive: boolean; // reflects 50% of next attack damage back
+  blockNextHalf: boolean; // quantum_encrypt — halve next damage
+  nextSummonDiscount: boolean; // prefab_drone — next summon -1 cost
+  pendingNextTurnBlock: number; // field_charge — gain block at next turn start
+  doubleChargeThisTurn: boolean; // overcharge_shield — charge gains ×2 this turn
 }
 
 export interface CombatState {
@@ -100,8 +127,10 @@ export interface RunState {
   playerMaxHp: number;
   gold: number;
   relics: string[];
+  // Persistent across-battle state (mind_hijack stash)
+  preloadedHack: number;
   map: MapNode[];
-  currentNode: number; // index into map
+  currentNode: number;
   screen: "title" | "map" | "battle" | "reward" | "rest" | "gameover" | "victory";
   combat: CombatState | null;
   rewardCards: CardDef[] | null;

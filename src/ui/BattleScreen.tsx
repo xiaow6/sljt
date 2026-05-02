@@ -12,7 +12,15 @@ interface DamageFloater {
   kind: "damage" | "heal" | "block";
 }
 
-type EffectKind = "beam" | "aura" | "aura-bio" | "aura-heal" | "module";
+type EffectKind =
+  | "beam"
+  | "aura"
+  | "aura-bio"
+  | "aura-heal"
+  | "aura-armor"
+  | "module"
+  | "hack"
+  | "summon";
 
 interface PlayEffect {
   id: number;
@@ -53,9 +61,12 @@ function useShake(targets: string[]) {
 
 function getEffectKindForCard(card: CardDef): EffectKind {
   if (card.type === "power") return "module";
+  if (card.effect.summon) return "summon";
   if (card.type === "attack") return "beam";
   if (card.effect.heal && card.effect.heal > 0) return "aura-heal";
   if (card.effect.hpCost && card.effect.hpCost > 0) return "aura-bio";
+  if (card.effect.hack || card.effect.data) return "hack";
+  if (card.effect.armor) return "aura-armor";
   return "aura";
 }
 
@@ -157,13 +168,13 @@ export function BattleScreen() {
     const fromY = portrait ? portrait.top + portrait.height / 2 : window.innerHeight - 120;
 
     const computeTarget = (): { x: number; y: number } => {
-      if (kind === "module") {
+      if (kind === "module" || kind === "summon") {
         const r = powersRowRef.current?.getBoundingClientRect();
         return r
           ? { x: r.left + r.width / 2, y: r.top + r.height / 2 }
           : { x: fromX, y: fromY };
       }
-      if (kind === "beam") {
+      if (kind === "beam" || kind === "hack") {
         if (targetIdx != null && enemyRefs.current[targetIdx]) {
           const r = enemyRefs.current[targetIdx]!.getBoundingClientRect();
           return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
@@ -336,13 +347,48 @@ export function BattleScreen() {
             <span className="stat-label">格挡</span>
             <span className="stat-value">{player.block}</span>
           </div>
+          {player.armor > 0 && (
+            <div className="stat-row">
+              <span className="stat-label">🛡 护甲</span>
+              <span className="stat-value armor-value">{player.armor}</span>
+            </div>
+          )}
           <div className="stat-row charge-row">
             <span className="stat-label">⚡充能</span>
             <span className="stat-value charge-value">{player.charge}</span>
           </div>
+          {player.data > 0 && (
+            <div className="stat-row">
+              <span className="stat-label">⌬ 信息流</span>
+              <span className="stat-value data-value">{player.data}</span>
+            </div>
+          )}
           {player.doubleNextAttack && <div className="badge">下次攻击 ×2</div>}
           {player.vulnerable > 0 && (
             <div className="badge badge-vuln">易伤 {player.vulnerable}</div>
+          )}
+          {player.blockNextHalf && (
+            <div className="badge">下次伤害减半</div>
+          )}
+          {player.bounceFieldActive && (
+            <div className="badge">反弹场就绪</div>
+          )}
+          {player.drones.length > 0 && (
+            <div className="drone-bay">
+              {player.drones.map((d, i) => {
+                const meta = DRONE_LABELS[d.kind];
+                return (
+                  <span
+                    key={i}
+                    className={`drone-slot drone-${d.kind} ${d.overclocked ? "drone-overclocked" : ""}`}
+                    title={`${meta.name}无人机 ×${d.stacks}`}
+                  >
+                    {meta.icon}
+                    {d.stacks > 1 && <sup>{d.stacks}</sup>}
+                  </span>
+                );
+              })}
+            </div>
           )}
           <div ref={powersRowRef} className="powers-row">
             {player.powers.map((p, i) => (
@@ -414,7 +460,7 @@ function EffectLayer({ effects }: { effects: PlayEffect[] }) {
   return (
     <div className="effect-layer">
       {effects.map((e) => {
-        if (e.kind === "beam") {
+        if (e.kind === "beam" || e.kind === "hack") {
           const dx = e.toX - e.fromX;
           const dy = e.toY - e.fromY;
           const length = Math.sqrt(dx * dx + dy * dy);
@@ -422,7 +468,7 @@ function EffectLayer({ effects }: { effects: PlayEffect[] }) {
           return (
             <div
               key={e.id}
-              className="effect-beam"
+              className={e.kind === "hack" ? "effect-beam effect-beam-hack" : "effect-beam"}
               style={{
                 left: `${e.fromX}px`,
                 top: `${e.fromY}px`,
@@ -432,13 +478,20 @@ function EffectLayer({ effects }: { effects: PlayEffect[] }) {
             />
           );
         }
-        if (e.kind === "aura" || e.kind === "aura-bio" || e.kind === "aura-heal") {
+        if (
+          e.kind === "aura" ||
+          e.kind === "aura-bio" ||
+          e.kind === "aura-heal" ||
+          e.kind === "aura-armor"
+        ) {
           const variantClass =
             e.kind === "aura-bio"
               ? "effect-aura-bio"
               : e.kind === "aura-heal"
                 ? "effect-aura-heal"
-                : "";
+                : e.kind === "aura-armor"
+                  ? "effect-aura-armor"
+                  : "";
           return (
             <div
               key={e.id}
@@ -447,11 +500,11 @@ function EffectLayer({ effects }: { effects: PlayEffect[] }) {
             />
           );
         }
-        if (e.kind === "module") {
+        if (e.kind === "module" || e.kind === "summon") {
           return (
             <div
               key={e.id}
-              className="effect-module"
+              className={e.kind === "summon" ? "effect-module effect-summon" : "effect-module"}
               style={{ left: `${e.toX}px`, top: `${e.toY}px` }}
             />
           );
@@ -462,9 +515,31 @@ function EffectLayer({ effects }: { effects: PlayEffect[] }) {
   );
 }
 
+const POWER_LABELS: Record<string, string> = {
+  reactor_overclock: "反应堆超频",
+  tactical_ai: "战术 AI",
+  nano_repair: "纳米修复",
+  metalize: "金属化",
+  reactive_armor: "反应装甲",
+  charge_absorb: "吸收充能",
+  resonance_barrier: "共振屏障",
+  swarm_protocol: "集群协议",
+  production_line: "量产线",
+  ai_hub: "AI 中枢",
+  swarm_heart: "机群之心",
+  data_flood: "数据洪流",
+  virus_deploy: "病毒部署",
+  nuclear_meltdown: "核熔毁",
+  phoenix_protocol: "凤凰协议",
+};
+
 function powerLabel(id: string) {
-  if (id === "reactor_overclock") return "反应堆超频";
-  if (id === "tactical_ai") return "战术 AI";
-  if (id === "nano_repair") return "纳米修复";
-  return id;
+  return POWER_LABELS[id] ?? id;
 }
+
+const DRONE_LABELS: Record<string, { name: string; icon: string }> = {
+  combat: { name: "战斗", icon: "⚔" },
+  guardian: { name: "护卫", icon: "🛡" },
+  repair: { name: "修复", icon: "❤" },
+  scout: { name: "侦察", icon: "👁" },
+};

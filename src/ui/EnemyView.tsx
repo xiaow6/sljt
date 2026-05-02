@@ -56,6 +56,12 @@ export function EnemyView({
         {enemy.vulnerable > 0 && (
           <span className="badge badge-vuln">易伤 {enemy.vulnerable}</span>
         )}
+        {enemy.hack > 0 && (
+          <span className="badge badge-hack">⌬ {enemy.hack}</span>
+        )}
+        {enemy.skipNext && (
+          <span className="badge badge-skip">已入侵</span>
+        )}
       </div>
     </div>
   );

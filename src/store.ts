@@ -42,6 +42,10 @@ function handleCombatEnd() {
   if (!state.combat) return;
   if (state.combat.over === "win") {
     state.playerHp = state.combat.player.hp;
+    // Carry mind_hijack stash forward.
+    const stash = (state.combat as typeof state.combat & { stashedHack?: number })
+      ?.stashedHack;
+    state.preloadedHack = stash ?? 0;
     const node = state.map[state.currentNode];
     node.visited = true;
 

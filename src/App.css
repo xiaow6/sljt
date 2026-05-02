@@ -908,6 +908,86 @@ button:disabled {
   border-color: var(--gold);
   color: var(--gold);
 }
+.badge-hack {
+  background: rgba(192, 132, 252, 0.15);
+  border-color: #c084fc;
+  color: #c084fc;
+}
+.badge-skip {
+  background: rgba(192, 132, 252, 0.4);
+  border-color: #c084fc;
+  color: #fff;
+  font-weight: 700;
+}
+.armor-value {
+  color: #b6c8ff;
+  text-shadow: 0 0 6px rgba(151, 192, 255, 0.6);
+}
+.data-value {
+  color: #c084fc;
+  text-shadow: 0 0 6px rgba(192, 132, 252, 0.6);
+}
+
+/* Drone bay */
+.drone-bay {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 6px;
+  background: rgba(75, 230, 234, 0.06);
+  border: 1px solid rgba(75, 230, 234, 0.3);
+  border-radius: 6px;
+}
+.drone-slot {
+  width: 32px;
+  height: 32px;
+  background: var(--bg-2);
+  border: 2px solid var(--cyan-dim);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  position: relative;
+  box-shadow: 0 0 8px rgba(75, 230, 234, 0.3);
+}
+.drone-slot sup {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: var(--cyan);
+  color: #000;
+  border-radius: 50%;
+  font-size: 9px;
+  padding: 2px 4px;
+  min-width: 14px;
+  text-align: center;
+  font-weight: 700;
+}
+.drone-combat {
+  border-color: var(--crimson);
+  color: var(--crimson);
+}
+.drone-guardian {
+  border-color: var(--block);
+  color: var(--block);
+}
+.drone-repair {
+  border-color: #5cf7a8;
+  color: #5cf7a8;
+}
+.drone-scout {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.drone-overclocked {
+  animation: drone-pulse 0.6s infinite;
+  box-shadow: 0 0 16px var(--cyan);
+}
+@keyframes drone-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
 
 /* Hand */
 .hand {
@@ -1037,6 +1117,26 @@ button:disabled {
   border-color: rgba(92, 247, 168, 0.95);
   background: radial-gradient(circle, rgba(92, 247, 168, 0.22) 0%, transparent 70%);
   box-shadow: 0 0 32px rgba(92, 247, 168, 0.6);
+}
+.effect-aura-armor {
+  border-color: rgba(151, 192, 255, 0.95);
+  background: radial-gradient(circle, rgba(151, 192, 255, 0.22) 0%, transparent 70%);
+  box-shadow: 0 0 32px rgba(151, 192, 255, 0.6);
+}
+.effect-beam-hack {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(192, 132, 252, 0.4) 10%,
+    rgba(192, 132, 252, 1) 50%,
+    rgba(192, 132, 252, 0.4) 90%,
+    transparent 100%
+  );
+  box-shadow: 0 0 16px rgba(192, 132, 252, 0.8), 0 0 32px rgba(192, 132, 252, 0.4);
+}
+.effect-summon {
+  background: radial-gradient(circle, rgba(75, 230, 234, 0.7) 0%, transparent 70%);
+  box-shadow: 0 0 40px rgba(75, 230, 234, 0.9);
 }
 
 .effect-module {
