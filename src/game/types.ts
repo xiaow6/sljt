@@ -41,6 +41,7 @@ export interface CardDef {
 }
 
 export type IntentKind = "attack" | "block" | "buff" | "debuff" | "unknown";
+// Buff intent text codes the effect via the value: positive = strength gain.
 export interface Intent {
   kind: IntentKind;
   value?: number;
@@ -66,6 +67,7 @@ export interface EnemyState {
   vulnerable: number;
   weak: number;
   hack: number; // Cyberwar — at >=5 the enemy skips next turn (consumes 5)
+  strength: number; // permanent +damage on attacks
   intent: Intent;
   alive: boolean;
   turn: number;

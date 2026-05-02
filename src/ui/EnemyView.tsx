@@ -53,6 +53,9 @@ export function EnemyView({
       </div>
       <div className="enemy-status">
         {enemy.block > 0 && <span className="badge badge-block">🛡 {enemy.block}</span>}
+        {enemy.strength > 0 && (
+          <span className="badge badge-str">力量 +{enemy.strength}</span>
+        )}
         {enemy.vulnerable > 0 && (
           <span className="badge badge-vuln">易伤 {enemy.vulnerable}</span>
         )}

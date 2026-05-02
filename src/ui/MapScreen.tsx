@@ -29,15 +29,23 @@ export function MapScreen() {
   const act = getAct(run.act);
   const wrapRef = useRef<HTMLDivElement>(null);
 
-  // On act change, scroll to bottom (entry row).
+  // Scroll behavior: entry on a new act → bottom; after each step → keep current
+  // node positioned ~70% down the visible area so past rows recede below.
   useEffect(() => {
-    if (wrapRef.current) {
-      // If a current node exists, center on it; else scroll to bottom.
-      const cur = run.map.find((n) => n.id === run.currentNodeId);
-      if (!cur) {
-        wrapRef.current.scrollTop = wrapRef.current.scrollHeight;
-      }
+    if (!wrapRef.current) return;
+    const wrap = wrapRef.current;
+    const cur = run.map.find((n) => n.id === run.currentNodeId);
+    if (!cur) {
+      wrap.scrollTo({ top: wrap.scrollHeight, behavior: "smooth" });
+      return;
     }
+    const node = wrap.querySelector(
+      `[data-node-id="${cur.id}"]`,
+    ) as HTMLElement | null;
+    if (!node) return;
+    const wrapH = wrap.clientHeight;
+    const targetTop = node.offsetTop - wrapH * 0.7;
+    wrap.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
   }, [run.act, run.currentNodeId, run.map]);
 
   const rows = Math.max(...run.map.map((n) => n.row), 0) + 1;
@@ -136,6 +144,7 @@ export function MapScreen() {
             return (
               <button
                 key={n.id}
+                data-node-id={n.id}
                 className={`map-node-btn node-${n.type} ${status}`}
                 style={{
                   left: `${c.x - NODE_W / 2}px`,
@@ -151,6 +160,20 @@ export function MapScreen() {
               </button>
             );
           })}
+          {(() => {
+            const cur = run.map.find((n) => n.id === run.currentNodeId);
+            if (!cur) return null;
+            const fogTop = nodeCenter(cur).y;
+            return (
+              <div
+                className="map-fog"
+                style={{
+                  top: `${fogTop}px`,
+                  height: `${mapHeight - fogTop}px`,
+                }}
+              />
+            );
+          })()}
         </div>
       </div>
 

@@ -88,19 +88,33 @@ export function BattleScreen() {
   const enemyRefs = useRef<(HTMLDivElement | null)[]>([]);
   const powersRowRef = useRef<HTMLDivElement>(null);
 
-  const prevHpRef = useRef<{ player: number; enemies: number[] }>({
+  const prevHpRef = useRef<{
+    player: number;
+    enemies: number[];
+    pBlock: number;
+    eBlocks: number[];
+    turn: number;
+  }>({
     player: c?.player.hp ?? 0,
     enemies: c?.enemies.map((e) => e.hp) ?? [],
+    pBlock: c?.player.block ?? 0,
+    eBlocks: c?.enemies.map((e) => e.block) ?? [],
+    turn: c?.turn ?? 0,
   });
 
-  const hpKey = c
-    ? `${c.player.hp}|${c.enemies.map((e) => e.hp).join(",")}`
+  const stateKey = c
+    ? `${c.player.hp}|${c.enemies.map((e) => e.hp).join(",")}|${
+        c.player.block
+      }|${c.enemies.map((e) => e.block).join(",")}|${c.turn}`
     : "";
+  const [lungeKey, setLungeKey] = useState(0);
 
   useEffect(() => {
     if (!c) return;
     const next: DamageFloater[] = [];
     const prev = prevHpRef.current;
+
+    // HP deltas
     const playerDelta = prev.player - c.player.hp;
     if (playerDelta > 0) {
       next.push({
@@ -129,6 +143,30 @@ export function BattleScreen() {
         });
       }
     });
+
+    // Block deltas (gain only — block consumption is silent)
+    const pBlockDelta = c.player.block - prev.pBlock;
+    if (pBlockDelta > 0) {
+      next.push({
+        id: nextFloaterId++,
+        target: "player",
+        value: pBlockDelta,
+        kind: "block",
+      });
+    }
+    c.enemies.forEach((e, i) => {
+      const prevBlock = prev.eBlocks[i] ?? 0;
+      const delta = e.block - prevBlock;
+      if (delta > 0) {
+        next.push({
+          id: nextFloaterId++,
+          target: `enemy:${i}`,
+          value: delta,
+          kind: "block",
+        });
+      }
+    });
+
     if (next.length > 0) {
       setFloaters((cur) => [...cur, ...next]);
       const ids = next.map((f) => f.id);
@@ -139,18 +177,35 @@ export function BattleScreen() {
         setFlashKey((k) => k + 1);
       }
     }
+
+    // Turn changed → enemy turn just ran. Trigger lunge on attacker enemies even
+    // if the player blocked everything (no HP delta).
+    if (c.turn > prev.turn) {
+      setLungeKey((k) => k + 1);
+    }
+
     prevHpRef.current = {
       player: c.player.hp,
       enemies: c.enemies.map((e) => e.hp),
+      pBlock: c.player.block,
+      eBlocks: c.enemies.map((e) => e.block),
+      turn: c.turn,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hpKey]);
+  }, [stateKey]);
 
   const damageTargets = floaters
     .filter((f) => f.kind === "damage")
     .map((f) => f.target);
   const shaking = useShake(damageTargets);
   const playerHit = damageTargets.includes("player");
+  const [lungeActive, setLungeActive] = useState(false);
+  useEffect(() => {
+    if (lungeKey === 0) return;
+    setLungeActive(true);
+    const t = setTimeout(() => setLungeActive(false), 420);
+    return () => clearTimeout(t);
+  }, [lungeKey]);
 
   if (!c) return null;
   const player = c.player;
@@ -283,7 +338,7 @@ export function BattleScreen() {
                 enemyRefs.current[i] = el;
               }}
               className={`enemy-wrap ${shaking.has(`enemy:${i}`) ? "shake" : ""} ${
-                playerHit && e.alive ? "lunge" : ""
+                (playerHit || lungeActive) && e.alive ? "lunge" : ""
               }`}
             >
               <EnemyView
@@ -299,7 +354,7 @@ export function BattleScreen() {
                 .filter((f) => f.target === `enemy:${i}`)
                 .map((f) => (
                   <div key={f.id} className={`floater floater-${f.kind}`}>
-                    -{f.value}
+                    {f.kind === "block" ? `🛡 +${f.value}` : `-${f.value}`}
                   </div>
                 ))}
             </div>
@@ -328,7 +383,11 @@ export function BattleScreen() {
               .filter((f) => f.target === "player")
               .map((f) => (
                 <div key={f.id} className={`floater floater-${f.kind}`}>
-                  {f.kind === "heal" ? "+" : "-"}{f.value}
+                  {f.kind === "heal"
+                    ? `+${f.value}`
+                    : f.kind === "block"
+                      ? `🛡 +${f.value}`
+                      : `-${f.value}`}
                 </div>
               ))}
           </div>

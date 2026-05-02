@@ -55,6 +55,7 @@ export function makeEnemyState(def: EnemyDef): EnemyState {
     vulnerable: 0,
     weak: 0,
     hack: 0,
+    strength: 0,
     intent: def.pattern(0, Math.random),
     alive: true,
     turn: 0,
@@ -672,7 +673,7 @@ function resolveEnemyIntent(c: CombatState, e: EnemyState) {
   if (it.kind === "attack") {
     const hits = it.hits ?? 1;
     for (let i = 0; i < hits; i++) {
-      let dmg = it.value ?? 0;
+      let dmg = (it.value ?? 0) + e.strength;
       if (e.weak > 0) dmg = Math.floor(dmg * 0.75);
       applyDamageToPlayer(c, dmg);
       if (c.over) return;
@@ -680,9 +681,10 @@ function resolveEnemyIntent(c: CombatState, e: EnemyState) {
   } else if (it.kind === "block") {
     e.block += it.value ?? 0;
   } else if (it.kind === "debuff") {
-    const stacks = e.def.id === "weaver" ? 3 : 2;
+    const stacks = it.value ?? (e.def.id === "weaver" ? 3 : 2);
     c.player.vulnerable += stacks;
   } else if (it.kind === "buff") {
-    // placeholder
+    // Buff value (if any) → strength gain. Bosses use this for escalation.
+    e.strength += it.value ?? 2;
   }
 }

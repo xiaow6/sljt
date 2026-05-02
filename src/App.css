@@ -464,6 +464,12 @@ button:disabled {
 }
 .floater-block {
   color: var(--block);
+  text-shadow: 0 0 12px rgba(151, 192, 255, 0.8);
+}
+.badge-str {
+  background: rgba(232, 52, 76, 0.15);
+  border-color: var(--crimson);
+  color: var(--crimson);
 }
 @keyframes floater-pop {
   0% {
@@ -646,6 +652,23 @@ button:disabled {
 }
 .map-node-btn:disabled {
   cursor: not-allowed;
+}
+
+/* Darkness rolling up — past rows fade into shadow as you climb */
+.map-fog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 7, 13, 0) 0%,
+    rgba(4, 7, 13, 0.55) 30%,
+    rgba(4, 7, 13, 0.85) 60%,
+    rgba(4, 7, 13, 0.97) 100%
+  );
+  transition: top 0.6s ease, height 0.6s ease;
 }
 
 .deck-strip {
