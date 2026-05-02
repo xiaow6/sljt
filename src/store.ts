@@ -171,6 +171,17 @@ export const actions = {
     state.screen = "map";
     emit();
   },
+  returnToTitle() {
+    // Auto-save preserves current run; just flip the screen.
+    state.screen = "title";
+    emit();
+  },
+  abandonRun() {
+    state = newRun();
+    pendingRelic = null;
+    clearSave();
+    emit();
+  },
   startRun() {
     if (state.screen !== "title") return;
     state.screen = "map";

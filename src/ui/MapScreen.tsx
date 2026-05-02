@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { actions, useRun } from "../store";
+import { MenuModal } from "./MenuModal";
 import { RelicBar } from "./RelicBar";
 import { DeckModal } from "./DeckModal";
 import { getAct } from "../game/acts";
@@ -26,6 +27,7 @@ const TYPE_ICON: Record<string, string> = {
 export function MapScreen() {
   const run = useRun();
   const [showDeck, setShowDeck] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const act = getAct(run.act);
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -94,6 +96,13 @@ export function MapScreen() {
           </span>
           <button className="stat-pill stat-clickable" onClick={() => setShowDeck(true)}>
             <span className="stat-icon">📜</span> 牌组 {run.deck.length}
+          </button>
+          <button
+            className="stat-pill stat-clickable map-menu-btn"
+            onClick={() => setShowMenu(true)}
+            title="菜单"
+          >
+            ☰
           </button>
         </div>
       </div>
@@ -206,6 +215,7 @@ export function MapScreen() {
       </div>
 
       {showDeck && <DeckModal onClose={() => setShowDeck(false)} />}
+      {showMenu && <MenuModal onClose={() => setShowMenu(false)} />}
     </div>
   );
 }
