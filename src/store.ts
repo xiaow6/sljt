@@ -16,6 +16,7 @@ import {
 import { ELITE_RELIC_POOL, pickRandom } from "./game/relics";
 import { EVENTS, pickRandomEvent } from "./game/events";
 import { upgradeCard } from "./game/upgrade";
+import { rollShop } from "./game/shop";
 
 type Listener = () => void;
 const listeners = new Set<Listener>();
@@ -148,7 +149,7 @@ function handleCombatEnd() {
     }
 
     const tier = isBoss ? "boss" : isElite ? "elite" : "battle";
-    state.rewardCards = rollRewardCards(3, tier);
+    state.rewardCards = rollRewardCards(3, tier, state.deck);
     state.screen = "reward";
     (state as RunState & { bossRewardPending?: boolean }).bossRewardPending = isBoss;
     state.gold += isBoss ? 100 : isElite ? 40 : 15;
@@ -207,10 +208,9 @@ export const actions = {
       return;
     }
     if (node.type === "shop") {
-      // MVP shop: gain 30 gold for now (placeholder).
-      state.gold += 30;
-      node.visited = true;
       state.currentNodeId = id;
+      state.shop = rollShop(state.deck);
+      state.screen = "shop";
       emit();
       return;
     }
@@ -315,6 +315,43 @@ export const actions = {
   restCancel() {
     if (state.screen !== "rest_upgrade") return;
     state.screen = "rest";
+    emit();
+  },
+  shopBuyCard(idx: number) {
+    if (state.screen !== "shop" || !state.shop) return;
+    const slot = state.shop.cards[idx];
+    if (!slot || slot.sold) return;
+    if (state.gold < slot.price) return;
+    state.gold -= slot.price;
+    state.deck.push({ ...slot.card });
+    slot.sold = true;
+    emit();
+  },
+  shopUpgradeCard(deckIdx: number) {
+    if (state.screen !== "shop" || !state.shop) return;
+    const card = state.deck[deckIdx];
+    if (!card || card.upgraded) return;
+    if (state.gold < state.shop.upgradePrice) return;
+    state.gold -= state.shop.upgradePrice;
+    state.deck[deckIdx] = upgradeCard(card);
+    emit();
+  },
+  shopRemoveCard(deckIdx: number) {
+    if (state.screen !== "shop" || !state.shop) return;
+    if (state.shop.removalUsed) return;
+    if (state.gold < state.shop.removalPrice) return;
+    if (state.deck.length <= 5) return; // can't strip below 5
+    state.gold -= state.shop.removalPrice;
+    state.deck.splice(deckIdx, 1);
+    state.shop.removalUsed = true;
+    emit();
+  },
+  shopLeave() {
+    if (state.screen !== "shop") return;
+    const node = getNode(state.map, state.currentNodeId);
+    if (node) node.visited = true;
+    state.shop = null;
+    state.screen = "map";
     emit();
   },
 };

@@ -1,4 +1,4 @@
-import type { Archetype } from "./types";
+import type { Archetype, CardDef } from "./types";
 
 export interface ActDef {
   id: number;
@@ -60,13 +60,32 @@ export function getAct(actId: number): ActDef {
   return ACTS[actId - 1] ?? ACTS[0];
 }
 
-// Reward weight by archetype: every reward roll picks 1 archetype focus then 3 cards.
-export function pickRewardArchetype(): Archetype {
-  // Slight neutral bias to keep starter cards relevant.
-  const roll = Math.random();
-  if (roll < 0.25) return "neutral";
-  if (roll < 0.45) return "berserk";
-  if (roll < 0.65) return "aegis";
-  if (roll < 0.85) return "drone";
-  return "cyber";
+// Pick a reward archetype biased by what's already in your deck.
+// Each archetype starts at weight 1 (so early picks are roughly even); each
+// non-starter card you've taken adds +1 to its archetype's weight, so a deck
+// trending toward one flavor will start showing more of it. Neutral cards
+// don't bias the roll (they don't define a build).
+export function pickRewardArchetype(deck: CardDef[] = []): Archetype {
+  const w: Record<Archetype, number> = {
+    neutral: 1,
+    berserk: 1,
+    aegis: 1,
+    drone: 1,
+    cyber: 1,
+  };
+  for (const c of deck) {
+    const a = c.archetype;
+    if (!a || a === "neutral") continue;
+    w[a] += 1.5; // strong bias as your build forms
+  }
+  // Reduce neutral chance — most rewards should be archetype-flavored.
+  w.neutral = 1;
+  const total = w.neutral + w.berserk + w.aegis + w.drone + w.cyber;
+  const r = Math.random() * total;
+  let acc = 0;
+  for (const k of Object.keys(w) as Archetype[]) {
+    acc += w[k];
+    if (r < acc) return k;
+  }
+  return "neutral";
 }

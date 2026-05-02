@@ -158,8 +158,12 @@ function pickRarity(tier: Tier): Rarity {
   return "rare";
 }
 
-export function rollRewardCards(count = 3, tier: Tier = "battle"): CardDef[] {
-  const focus = pickRewardArchetype();
+export function rollRewardCards(
+  count = 3,
+  tier: Tier = "battle",
+  deck: CardDef[] = [],
+): CardDef[] {
+  const focus = pickRewardArchetype(deck);
   const picks: CardDef[] = [];
   const taken = new Set<string>();
 

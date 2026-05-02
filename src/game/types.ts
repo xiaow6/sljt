@@ -160,10 +160,19 @@ export interface RunState {
     | "rest"
     | "rest_upgrade"
     | "event"
+    | "shop"
     | "gameover"
     | "victory";
   combat: CombatState | null;
   rewardCards: CardDef[] | null;
   currentEventId: string | null;
   eventResult: string | null;
+  shop: ShopOffer | null;
+}
+
+export interface ShopOffer {
+  cards: { card: CardDef; price: number; sold: boolean }[];
+  upgradePrice: number;
+  removalPrice: number;
+  removalUsed: boolean;
 }

@@ -21,5 +21,6 @@ export function newRun(): RunState {
     rewardCards: null,
     currentEventId: null,
     eventResult: null,
+    shop: null,
   };
 }

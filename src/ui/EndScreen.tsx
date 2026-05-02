@@ -28,8 +28,8 @@ export function EndScreen() {
           <span className="end-stat-value">Act {run.act}</span>
         </div>
         <div className="end-stat">
-          <span className="end-stat-label">金币</span>
-          <span className="end-stat-value">{run.gold}</span>
+          <span className="end-stat-label">硅基芯片</span>
+          <span className="end-stat-value">◈ {run.gold}</span>
         </div>
       </div>
       {run.relics.length > 0 && (

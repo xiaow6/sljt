@@ -92,7 +92,7 @@ export function MapScreen() {
             <span className="stat-icon">❤</span> {run.playerHp} / {run.playerMaxHp}
           </span>
           <span className="stat-pill">
-            <span className="stat-icon">💰</span> {run.gold}
+            <span className="stat-icon chip-icon">◈</span> {run.gold}
           </span>
           <button className="stat-pill stat-clickable" onClick={() => setShowDeck(true)}>
             <span className="stat-icon">📜</span> 牌组 {run.deck.length}

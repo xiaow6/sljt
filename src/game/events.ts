@@ -93,25 +93,25 @@ export const EVENTS: EventDef[] = [
       "一座先驱者赌轮悬浮在空荡的房间里,刻盘上写着「亏与赚」。你听见千万种可能的命运在低语。",
     choices: [
       {
-        label: "下注。50% 概率获 50 金币,50% 概率失 5 HP。",
+        label: "下注。50% 概率获 50 硅基芯片,50% 概率失 5 HP。",
         hint: "赌一把",
         resolve: (run) => {
           if (Math.random() < 0.5) {
             run.gold += 50;
-            return "赌轮停在金色一侧。+50 金币。";
+            return "赌轮停在金色一侧。+50 硅基芯片。";
           }
           damagePlayer(run, 5);
           return "赌轮停在血色一侧。−5 HP。";
         },
       },
       {
-        label: "重注。50% 概率获 120 金币,50% 概率失 12 HP。",
+        label: "重注。50% 概率获 120 硅基芯片,50% 概率失 12 HP。",
         hint: "all in",
         enabled: (run) => run.playerHp > 13,
         resolve: (run) => {
           if (Math.random() < 0.5) {
             run.gold += 120;
-            return "命运站在你这边。+120 金币。";
+            return "命运站在你这边。+120 硅基芯片。";
           }
           damagePlayer(run, 12);
           return "你听见赌轮发出冷笑。−12 HP。";
@@ -147,7 +147,7 @@ export const EVENTS: EventDef[] = [
           }
           if (roll < 0.75) {
             run.gold += 60;
-            return "箱内是 60 金币。";
+            return "箱内是 60 硅基芯片。";
           }
           if (roll < 0.92) {
             damagePlayer(run, 8);
@@ -254,14 +254,14 @@ export const EVENTS: EventDef[] = [
       "一个被电缆缠绕的躯体跪坐在房间中央,空洞的头盔向你低语:「我能从你的牌库里抹去一张牌,只需付出一点代价。」",
     choices: [
       {
-        label: "付 50 金币,从牌库随机移除一张牌。",
-        hint: "−50 金币",
+        label: "付 50 硅基芯片,从牌库随机移除一张牌。",
+        hint: "−50 硅基芯片",
         enabled: (run) => run.gold >= 50 && run.deck.length > 5,
         resolve: (run) => {
           run.gold -= 50;
           const idx = Math.floor(Math.random() * run.deck.length);
           const removed = run.deck.splice(idx, 1)[0];
-          return `你支付了金币。占卜师从牌库中抹去了「${removed.name}」。`;
+          return `你支付了硅基芯片。占卜师从牌库中抹去了「${removed.name}」。`;
         },
       },
       {
@@ -290,14 +290,14 @@ export const EVENTS: EventDef[] = [
       "你撞见一只破裂的逃生舱,舱中尸体已经化作金属与晶矿。强烈辐射在腐蚀一切。",
     choices: [
       {
-        label: "暴露在辐射中搜刮。−15 HP,+80 金币,治疗一半最大 HP。",
+        label: "暴露在辐射中搜刮。−15 HP,+80 硅基芯片,治疗一半最大 HP。",
         hint: "高风险高回报",
         enabled: (run) => run.playerHp > 16,
         resolve: (run) => {
           damagePlayer(run, 15);
           run.gold += 80;
           healPlayer(run, Math.floor(run.playerMaxHp / 2));
-          return "你忍着剧痛搜刮完毕。+80 金币,治疗了一半。";
+          return "你忍着剧痛搜刮完毕。+80 硅基芯片,治疗了一半。";
         },
       },
       {
@@ -324,11 +324,11 @@ export const EVENTS: EventDef[] = [
         },
       },
       {
-        label: "+200 金币",
+        label: "+200 硅基芯片",
         hint: "财富",
         resolve: (run) => {
           run.gold += 200;
-          return "卷轴溶解为 200 金币。";
+          return "卷轴溶解为 200 硅基芯片。";
         },
       },
       {
@@ -354,7 +354,7 @@ export const EVENTS: EventDef[] = [
     name: "血色集市",
     icon: "🏪",
     flavor:
-      "一个佝偻的赛博商人在隧道里支起摊位。他不收金币——只接受血。",
+      "一个佝偻的赛博商人在隧道里支起摊位。他不收硅基芯片——只接受血。",
     choices: [
       {
         label: "用 8 HP 换一张随机稀有卡",
@@ -368,13 +368,13 @@ export const EVENTS: EventDef[] = [
         },
       },
       {
-        label: "用 15 HP 换 100 金币",
-        hint: "−15 HP +100 金币",
+        label: "用 15 HP 换 100 硅基芯片",
+        hint: "−15 HP +100 硅基芯片",
         enabled: (run) => run.playerHp > 16,
         resolve: (run) => {
           damagePlayer(run, 15);
           run.gold += 100;
-          return "商人喝下你的血,扔来 100 金币。";
+          return "商人喝下你的血,扔来 100 硅基芯片。";
         },
       },
       {
