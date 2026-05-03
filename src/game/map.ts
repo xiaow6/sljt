@@ -122,13 +122,19 @@ export function getNode(map: MapNode[], id: string | null): MapNode | undefined 
   return map.find((n) => n.id === id);
 }
 
-// Depth-based difficulty: enemies at deeper rows hit harder & have more HP.
-// Bosses are pre-tuned so we leave them alone. Elites scale less aggressively
-// than smalls because they are already strong.
-function scaleEnemy(enemy: EnemyDef, row: number, totalRows: number): EnemyDef {
+// Difficulty: HP & atk/blk values multiplied by (act baseline) × (within-act
+// depth ramp). Bosses are pre-tuned and skip scaling. Elites ramp slower.
+//
+// Smalls in Act 1 row 0  → 1.00× (baseline)
+// Smalls in Act 1 boss row → 1.55×  (1.0 × 1.55)
+// Smalls in Act 3 row 0  → 1.30×
+// Smalls in Act 3 boss row → 2.02×  (1.30 × 1.55)
+function scaleEnemy(enemy: EnemyDef, act: number, row: number, totalRows: number): EnemyDef {
   if (enemy.isBoss) return { ...enemy };
   const depth = totalRows > 1 ? row / Math.max(1, totalRows - 1) : 0;
-  const mul = enemy.isElite ? 1 + depth * 0.15 : 1 + depth * 0.30;
+  const depthMul = enemy.isElite ? 1 + depth * 0.30 : 1 + depth * 0.55;
+  const actMul = 1 + (act - 1) * 0.15; // 1.00 / 1.15 / 1.30
+  const mul = depthMul * actMul;
   if (mul <= 1.001) return { ...enemy };
   const orig = enemy.pattern;
   return {
@@ -147,22 +153,31 @@ function scaleEnemy(enemy: EnemyDef, row: number, totalRows: number): EnemyDef {
 export function pickEncounter(node: MapNode): EnemyDef[] {
   const act = getAct(node.act);
   const totalRows = act.rows;
-  const scale = (e: EnemyDef) => scaleEnemy(e, node.row, totalRows);
+  const scale = (e: EnemyDef) => scaleEnemy(e, node.act, node.row, totalRows);
 
   if (node.type === "boss") return [scale({ ...ENEMIES[act.boss] })];
   if (node.type === "elite") {
     const id = act.elites[Math.floor(Math.random() * act.elites.length)];
     return [scale({ ...ENEMIES[id] })];
   }
-  // normal battle — dual-encounter chance grows with depth
+  // Normal battle. Higher depth & higher act → more dual / triple encounters.
   const depth = totalRows > 1 ? node.row / Math.max(1, totalRows - 1) : 0;
-  const dualChance = 0.3 + depth * 0.25; // 0.30 → 0.55
+  const dualChance = 0.35 + depth * 0.35 + (node.act - 1) * 0.05;
+  const tripleChance =
+    node.act >= 2 && depth > 0.5 ? (depth - 0.5) * 0.4 + (node.act - 2) * 0.05 : 0;
   const pool = act.smalls;
-  const a = pool[Math.floor(Math.random() * pool.length)];
-  const dual = Math.random() < dualChance && pool.length > 1;
-  if (dual) {
-    let b = pool[Math.floor(Math.random() * pool.length)];
-    while (b === a) b = pool[Math.floor(Math.random() * pool.length)];
+  const pick = () => pool[Math.floor(Math.random() * pool.length)];
+  const a = pick();
+  if (Math.random() < tripleChance && pool.length > 2) {
+    let b = pick();
+    while (b === a) b = pick();
+    let cId = pick();
+    while (cId === a || cId === b) cId = pick();
+    return [scale({ ...ENEMIES[a] }), scale({ ...ENEMIES[b] }), scale({ ...ENEMIES[cId] })];
+  }
+  if (Math.random() < dualChance && pool.length > 1) {
+    let b = pick();
+    while (b === a) b = pick();
     return [scale({ ...ENEMIES[a] }), scale({ ...ENEMIES[b] })];
   }
   return [scale({ ...ENEMIES[a] })];

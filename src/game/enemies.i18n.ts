@@ -168,4 +168,67 @@ export const ENEMY_I18N: Record<string, EnemyI18n> = {
     loreEn:
       "A temporal-class inquisitor. It returns the verdict first, then begins the questioning.",
   },
+  pulse_drone: {
+    nameEn: "Pulse Drone",
+    lore:
+      "蓄能型机甲。胸口的电容在你能听见之前已经在哼了。",
+    loreEn:
+      "Charge-cycled drone. The capacitor in its chest is already humming before you hear it.",
+  },
+  silent_voidling: {
+    nameEn: "Silent Voidling",
+    lore:
+      "它从不发声。和它对视会让你忘记呼吸。",
+    loreEn:
+      "It never makes a sound. Meeting its gaze makes you forget how to breathe.",
+  },
+  gravity_acolyte: {
+    nameEn: "Gravity Acolyte",
+    lore:
+      "引力监管者的辅祭。手套里只有一颗微缩奇点,但已经够把你的肺压扁。",
+    loreEn:
+      "Acolyte of the Gravity Warden. Just one micro-singularity in its glove — enough to flatten your lungs.",
+  },
+  swarm_alpha: {
+    nameEn: "Spore Alpha",
+    lore:
+      "母巢的种群指挥官。它的孢子比它本体更危险。",
+    loreEn:
+      "The hive's brood commander. Its spores are more dangerous than its body.",
+  },
+  void_brute: {
+    nameEn: "Void Brute",
+    lore:
+      "生物泰坦的某个失败实验。它什么都不记得,只记得「砸」。",
+    loreEn:
+      "A failed bio-titan experiment. It remembers nothing — except how to swing.",
+  },
+  time_acolyte: {
+    nameEn: "Time Acolyte",
+    lore:
+      "蚀时者的低阶辅祭。袍子里掉出的不是灰尘,是分钟。",
+    loreEn:
+      "Junior acolyte to the Time Eater. What falls from its robe isn't dust — it's minutes.",
+  },
+  runic_apostle: {
+    nameEn: "Runic Apostle",
+    lore:
+      "符文经文的传抄者。它一边走路一边在你脑子里写字。",
+    loreEn:
+      "Scribe of the runic scripture. As it walks, it writes inside your skull.",
+  },
+  silicon_judge: {
+    nameEn: "Silicon Judge",
+    lore:
+      "审讯官的判决者职级。它的判词永远只有一句,而且永远对。",
+    loreEn:
+      "Judge-rank of the inquisitor caste. Its verdict is always one sentence — and always correct.",
+  },
+  time_warden: {
+    nameEn: "Time Warden",
+    lore:
+      "时序近卫。它在每一个未来里都已经赢了——包括这一次。",
+    loreEn:
+      "Temporal honour-guard. It has already won in every future — including this one.",
+  },
 };

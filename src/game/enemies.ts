@@ -107,6 +107,34 @@ export const ENEMIES: Record<string, EnemyDef> = {
       return atk(12);
     },
   },
+  pulse_drone: {
+    id: "pulse_drone",
+    name: "脉冲机甲",
+    hp: 28,
+    art: "enemies/biomech_drone.png",
+    pattern: (turn) => {
+      if (turn % 3 === 0) return buff("intent.pulse_drone.charge");
+      if (turn % 3 === 1) return atk(12);
+      return atk(4, 2);
+    },
+  },
+  silent_voidling: {
+    id: "silent_voidling",
+    name: "缄默使徒",
+    hp: 22,
+    art: "enemies/voidling.png",
+    pattern: (turn) => {
+      const r = turn % 3;
+      if (r === 0)
+        return {
+          kind: "special",
+          special: "apply_weak_2",
+          textKey: "intent.silent.weak",
+        };
+      if (r === 1) return atk(7);
+      return atk(3, 2);
+    },
+  },
   weaver: {
     id: "weaver",
     name: "织网者",
@@ -209,6 +237,50 @@ export const ENEMIES: Record<string, EnemyDef> = {
       if (r === 2) return atk(7, 2);
       if (r === 3) return blk(14);
       return atk(11);
+    },
+  },
+  gravity_acolyte: {
+    id: "gravity_acolyte",
+    name: "引力辅祭",
+    hp: 46,
+    art: "enemies/gravity_warden.png",
+    pattern: (turn) => {
+      const r = turn % 4;
+      if (r === 0) return atk(12);
+      if (r === 1)
+        return {
+          kind: "special",
+          special: "apply_vuln_weak",
+          textKey: "intent.gravity.crush",
+        };
+      if (r === 2) return atk(6, 2);
+      return blk(10);
+    },
+  },
+  swarm_alpha: {
+    id: "swarm_alpha",
+    name: "孢子始祖",
+    hp: 56,
+    art: "enemies/swarm_queen.png",
+    pattern: (turn) => {
+      if (turn === 0) return buff("intent.swarm_alpha.brood");
+      const r = turn % 4;
+      if (r === 1) return atk(5, 3);
+      if (r === 2) return atk(11);
+      if (r === 3) return blk(10);
+      return atk(7, 2);
+    },
+  },
+  void_brute: {
+    id: "void_brute",
+    name: "虚空蛮兽",
+    hp: 60,
+    art: "enemies/bio_titan.png",
+    pattern: (turn) => {
+      const r = turn % 3;
+      if (r === 0) return atk(17);
+      if (r === 1) return blk(8);
+      return atk(7, 2);
     },
   },
   gravity_warden: {
@@ -316,6 +388,72 @@ export const ENEMIES: Record<string, EnemyDef> = {
       if (r === 2) return atk(8, 3);
       if (r === 3) return blk(18);
       return atk(26);
+    },
+  },
+  time_acolyte: {
+    id: "time_acolyte",
+    name: "时序辅祭",
+    hp: 50,
+    art: "enemies/time_eater.png",
+    pattern: (turn) => {
+      const r = turn % 4;
+      if (r === 0)
+        return {
+          kind: "special",
+          special: "apply_vuln_weak",
+          textKey: "intent.gravity.crush",
+        };
+      if (r === 1) return atk(13);
+      if (r === 2) return atk(6, 2);
+      return blk(10);
+    },
+  },
+  runic_apostle: {
+    id: "runic_apostle",
+    name: "符文使徒",
+    hp: 58,
+    art: "enemies/runic_priest.png",
+    pattern: (turn) => {
+      if (turn === 0) return buff("intent.chrono_priest.foretell");
+      const r = turn % 4;
+      if (r === 1) return debuff("intent.priest.curse", 4);
+      if (r === 2) return atk(14);
+      if (r === 3) return atk(7, 2);
+      return blk(12);
+    },
+  },
+  silicon_judge: {
+    id: "silicon_judge",
+    name: "硅基判官",
+    hp: 66,
+    art: "enemies/silicon_inquisitor.png",
+    pattern: (turn) => {
+      const r = turn % 4;
+      if (r === 0) return atk(15);
+      if (r === 1) return atk(8, 2);
+      if (r === 2) return blk(14);
+      return debuff("intent.priest.curse", 3);
+    },
+  },
+  time_warden: {
+    id: "time_warden",
+    name: "时序近卫",
+    hp: 110,
+    isElite: true,
+    art: "enemies/time_eater.png",
+    pattern: (turn) => {
+      if (turn === 0) return buff("intent.chrono_priest.foretell");
+      const r = turn % 5;
+      if (r === 1) return atk(20);
+      if (r === 2) return atk(9, 3);
+      if (r === 3)
+        return {
+          kind: "special",
+          special: "apply_weak_3",
+          textKey: "intent.timeWarden.dilate",
+        };
+      if (r === 4) return blk(18);
+      return atk(28);
     },
   },
   council_speaker: {

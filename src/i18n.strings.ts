@@ -179,6 +179,11 @@ const zh: Record<string, string> = {
   "intent.bio_brute.rage": "蛮怒生长 (力量 +2)",
   "intent.void_horror.scream": "虚空尖啸 (易伤 3)",
   "intent.chrono_priest.foretell": "时序预言 (力量 +2)",
+  "intent.pulse_drone.charge": "脉冲蓄能 (力量 +2)",
+  "intent.silent.weak": "缄默之印 (虚弱 2)",
+  "intent.gravity.crush": "引力压制 (易伤 2 + 虚弱 2)",
+  "intent.swarm_alpha.brood": "孢子产卵 (力量 +2)",
+  "intent.timeWarden.dilate": "时间膨胀 (虚弱 3)",
 
   // Relics (label + description)
   "relic.quantum_battery.name": "量子电池",
@@ -388,6 +393,11 @@ const en: Record<string, string> = {
   "intent.bio_brute.rage": "Feral Surge — Str +2",
   "intent.void_horror.scream": "Void Scream — Vuln 3",
   "intent.chrono_priest.foretell": "Foretell — Str +2",
+  "intent.pulse_drone.charge": "Pulse Charge — Str +2",
+  "intent.silent.weak": "Silent Mark — Weak 2",
+  "intent.gravity.crush": "Gravity Crush — Vuln 2 + Weak 2",
+  "intent.swarm_alpha.brood": "Brood — Str +2",
+  "intent.timeWarden.dilate": "Time Dilate — Weak 3",
 
   "relic.quantum_battery.name": "Quantum Battery",
   "relic.quantum_battery.desc": "Start each combat with 5 Charge.",

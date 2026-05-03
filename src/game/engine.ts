@@ -706,6 +706,19 @@ function resolveEnemyIntent(c: CombatState, e: EnemyState) {
 
 function runSpecialIntent(c: CombatState, _e: EnemyState, id: string) {
   switch (id) {
+    case "apply_weak_2": {
+      c.player.weak += 2;
+      break;
+    }
+    case "apply_weak_3": {
+      c.player.weak += 3;
+      break;
+    }
+    case "apply_vuln_weak": {
+      c.player.vulnerable += 2;
+      c.player.weak += 2;
+      break;
+    }
     case "weaver_rewind": {
       // Discard 2 random cards from hand + apply 2 weak.
       for (let i = 0; i < 2 && c.hand.length > 0; i++) {
