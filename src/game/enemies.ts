@@ -39,6 +39,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "休眠哨兵",
     hp: 28,
     art: "enemies/dormant_sentinel.png",
+    traits: ["hardened"],
+    traitTune: { hardened: 2 },
     pattern: (turn) => {
       if (turn === 0) return buff("intent.charging");
       if (turn === 1) return atk(14);
@@ -50,6 +52,7 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "虚空使徒",
     hp: 20,
     art: "enemies/voidling.png",
+    traits: ["phasing"],
     pattern: (turn) =>
       turn % 3 === 0 ? debuff("intent.voidling.curse", 2) : atk(7),
   },
@@ -73,6 +76,7 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "装甲机甲",
     hp: 30,
     art: "enemies/biomech_drone.png",
+    traits: ["curl_up"],
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0) return blk(8);
@@ -85,6 +89,7 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "虚空潜行者",
     hp: 24,
     art: "enemies/voidling.png",
+    traits: ["phasing"],
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0) return atk(8);
@@ -98,6 +103,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     hp: 64,
     isElite: true,
     art: "enemies/dormant_sentinel.png",
+    traits: ["hardened"],
+    traitTune: { hardened: 3 },
     pattern: (turn) => {
       if (turn === 0) return buff("intent.charging");
       const r = turn % 4;
@@ -123,6 +130,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "缄默使徒",
     hp: 22,
     art: "enemies/voidling.png",
+    traits: ["thorns"],
+    traitTune: { thorns: 2 },
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0)
@@ -164,6 +173,7 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "生物泰坦",
     hp: 42,
     art: "enemies/bio_titan.png",
+    traits: ["spite"],
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0) return atk(11);
@@ -191,6 +201,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "生物巨兽",
     hp: 52,
     art: "enemies/bio_titan.png",
+    traits: ["curl_up"],
+    traitTune: { curlUp: 8 },
     pattern: (turn) => {
       if (turn === 0) return buff("intent.bio_brute.rage");
       const r = turn % 3;
@@ -204,6 +216,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "虚空梦魇",
     hp: 38,
     art: "enemies/voidling.png",
+    traits: ["thorns", "phasing"],
+    traitTune: { thorns: 3 },
     pattern: (turn) => {
       const r = turn % 4;
       if (r === 0) return debuff("intent.void_horror.scream", 3);
@@ -230,6 +244,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     hp: 78,
     isElite: true,
     art: "enemies/bio_titan.png",
+    traits: ["curl_up", "spite"],
+    traitTune: { curlUp: 10 },
     pattern: (turn) => {
       if (turn === 0) return buff("intent.bio_brute.rage");
       const r = turn % 4;
@@ -276,6 +292,7 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "虚空蛮兽",
     hp: 60,
     art: "enemies/bio_titan.png",
+    traits: ["spite"],
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0) return atk(17);
@@ -367,6 +384,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "虚空守望者",
     hp: 64,
     art: "enemies/time_eater.png",
+    traits: ["hardened"],
+    traitTune: { hardened: 3 },
     pattern: (turn) => {
       const r = turn % 4;
       if (r === 0) return atk(15);
@@ -427,6 +446,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "硅基判官",
     hp: 66,
     art: "enemies/silicon_inquisitor.png",
+    traits: ["thorns"],
+    traitTune: { thorns: 3 },
     pattern: (turn) => {
       const r = turn % 4;
       if (r === 0) return atk(15);
@@ -441,6 +462,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     hp: 110,
     isElite: true,
     art: "enemies/time_eater.png",
+    traits: ["hardened", "spite"],
+    traitTune: { hardened: 4 },
     pattern: (turn) => {
       if (turn === 0) return buff("intent.chrono_priest.foretell");
       const r = turn % 5;

@@ -89,6 +89,18 @@ const zh: Record<string, string> = {
   "kw.exhaust": "消耗",
   "kw.exhaust.desc": "打出后被移出本场战斗,不进入弃牌堆。",
 
+  // Enemy traits
+  "trait.thorns": "反击",
+  "trait.thorns.desc": "你每攻击它一次,自身受到反击伤害。",
+  "trait.curl_up": "蜷缩",
+  "trait.curl_up.desc": "首次受到伤害时,获得格挡。",
+  "trait.hardened": "硬化",
+  "trait.hardened.desc": "每次受到的伤害减少一个固定值(在易伤计算之后,格挡之前)。",
+  "trait.spite": "狂怒",
+  "trait.spite.desc": "HP 降到 50% 时,永久力量 +2。",
+  "trait.phasing": "相位",
+  "trait.phasing.desc": "每受到第 3 次攻击时穿透——本次造成 0 伤害。",
+
   // Reward
   "reward.title": "战利品 — 选一张牌",
   "reward.relicLabel": "遗物",
@@ -308,6 +320,17 @@ const en: Record<string, string> = {
   "kw.heal.desc": "Restore HP, capped at max.",
   "kw.exhaust": "Exhaust",
   "kw.exhaust.desc": "Played card is removed from this combat instead of going to discard.",
+
+  "trait.thorns": "Thorns",
+  "trait.thorns.desc": "When you hit this enemy, you take damage back.",
+  "trait.curl_up": "Curl Up",
+  "trait.curl_up.desc": "Gains block the first time it actually loses HP.",
+  "trait.hardened": "Hardened",
+  "trait.hardened.desc": "Every incoming hit reduced by a flat amount (after Vuln, before block).",
+  "trait.spite": "Spite",
+  "trait.spite.desc": "When dropped below 50% HP, gains +2 permanent Strength.",
+  "trait.phasing": "Phasing",
+  "trait.phasing.desc": "Every 3rd hit phases through — deals 0 damage.",
 
   "reward.title": "Rewards — Pick One Card",
   "reward.relicLabel": "Relic",

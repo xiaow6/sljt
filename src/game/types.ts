@@ -63,6 +63,14 @@ export interface Intent {
   special?: string;
 }
 
+// Per-enemy signature mechanics. See engine.ts for behavior.
+//   thorns    – attacker takes 2 dmg whenever this enemy is hit
+//   curl_up   – first time damaged, gains block
+//   hardened  – every incoming hit reduced by 3 (after vuln, before block)
+//   spite     – when HP first drops below 50%, permanently +2 strength
+//   phasing   – every 3rd hit deals 0 damage
+export type EnemyTrait = "thorns" | "curl_up" | "hardened" | "spite" | "phasing";
+
 export interface EnemyDef {
   id: string;
   name: string;
@@ -71,6 +79,9 @@ export interface EnemyDef {
   pattern: (turn: number, rng: () => number) => Intent;
   isElite?: boolean;
   isBoss?: boolean;
+  traits?: EnemyTrait[];
+  // Per-trait tuning (defaults: thorns 2 dmg, curl_up 6 block, hardened 3 dmg)
+  traitTune?: { thorns?: number; curlUp?: number; hardened?: number };
 }
 
 export interface EnemyState {
@@ -86,6 +97,10 @@ export interface EnemyState {
   alive: boolean;
   turn: number;
   skipNext: boolean; // set by hack threshold
+  // Trait runtime state
+  curlUsed: boolean;
+  hitsTaken: number;
+  spiteTriggered: boolean;
 }
 
 export interface DroneState {

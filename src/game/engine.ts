@@ -60,6 +60,9 @@ export function makeEnemyState(def: EnemyDef): EnemyState {
     alive: true,
     turn: 0,
     skipNext: false,
+    curlUsed: false,
+    hitsTaken: 0,
+    spiteTriggered: false,
   };
 }
 
@@ -125,15 +128,62 @@ export function drawCards(c: CombatState, n: number) {
 
 function applyDamageToEnemy(c: CombatState, enemy: EnemyState, raw: number) {
   if (!enemy.alive) return;
+  const traits = enemy.def.traits ?? [];
+  const tune = enemy.def.traitTune ?? {};
+
+  // Phasing: every 3rd hit on this enemy phases through (0 dmg).
+  const hitIndex = enemy.hitsTaken + 1;
+  enemy.hitsTaken = hitIndex;
+  if (traits.includes("phasing") && hitIndex % 3 === 0) {
+    logMsg(c, `${enemy.def.name} 相位化 — 这一击穿透。`);
+    return;
+  }
+
   let dmg = raw;
   if (enemy.vulnerable > 0) dmg = Math.floor(dmg * 1.5);
+  // Hardened: shave a flat amount off every incoming hit.
+  if (traits.includes("hardened")) {
+    dmg = Math.max(0, dmg - (tune.hardened ?? 3));
+  }
+
   let remaining = dmg;
   if (enemy.block > 0) {
     const used = Math.min(enemy.block, remaining);
     enemy.block -= used;
     remaining -= used;
   }
-  enemy.hp -= remaining;
+
+  if (remaining > 0) {
+    // Curl Up: first time it actually loses HP, gain block instead of nothing
+    // — but the hit still registers for damage purposes (so it doesn't soak
+    // this hit, just makes the next ones harder). Triggers BEFORE hp drop so
+    // a finisher won't pre-empt it.
+    if (traits.includes("curl_up") && !enemy.curlUsed) {
+      enemy.curlUsed = true;
+      enemy.block += tune.curlUp ?? 6;
+      logMsg(c, `${enemy.def.name} 蜷缩 — 获得 ${tune.curlUp ?? 6} 格挡。`);
+    }
+    enemy.hp -= remaining;
+  }
+
+  // Thorns: reflect a small flat amount back at the player on every hit.
+  if (traits.includes("thorns")) {
+    const back = tune.thorns ?? 2;
+    applyDamageToPlayer(c, back);
+  }
+
+  // Spite: when crossing the 50% HP threshold, lash out with permanent +str.
+  if (
+    traits.includes("spite") &&
+    !enemy.spiteTriggered &&
+    enemy.hp <= enemy.maxHp / 2 &&
+    enemy.hp > 0
+  ) {
+    enemy.spiteTriggered = true;
+    enemy.strength += 2;
+    logMsg(c, `${enemy.def.name} 狂怒 — 力量 +2。`);
+  }
+
   if (enemy.hp <= 0) {
     enemy.hp = 0;
     enemy.alive = false;

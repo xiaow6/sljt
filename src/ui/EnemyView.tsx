@@ -46,6 +46,19 @@ export function EnemyView({
         )}
       </div>
       <div className="enemy-name">{name}</div>
+      {enemy.def.traits && enemy.def.traits.length > 0 && (
+        <div className="enemy-traits">
+          {enemy.def.traits.map((tr) => (
+            <span
+              key={tr}
+              className={`badge badge-trait badge-trait-${tr} tooltip-host`}
+              data-tip={t(`trait.${tr}.desc`)}
+            >
+              {t(`trait.${tr}`)}
+            </span>
+          ))}
+        </div>
+      )}
       <div className="enemy-hp-bar">
         <div
           className="enemy-hp-fill"

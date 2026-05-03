@@ -1241,6 +1241,46 @@ button:disabled {
   color: var(--gold);
 }
 
+/* Enemy signature trait badges (sit between name and HP bar) */
+.enemy-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  margin: 2px 0 4px;
+}
+.badge-trait {
+  font-size: 10px;
+  padding: 1px 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.badge-trait-thorns {
+  background: rgba(231, 76, 99, 0.14);
+  border-color: #e74c63;
+  color: #f37b8a;
+}
+.badge-trait-curl_up {
+  background: rgba(151, 192, 255, 0.14);
+  border-color: var(--block);
+  color: var(--block);
+}
+.badge-trait-hardened {
+  background: rgba(180, 180, 180, 0.14);
+  border-color: #bcbcbc;
+  color: #d8d8d8;
+}
+.badge-trait-spite {
+  background: rgba(246, 76, 76, 0.14);
+  border-color: #ff7676;
+  color: #ffa1a1;
+}
+.badge-trait-phasing {
+  background: rgba(186, 132, 255, 0.14);
+  border-color: #ba84ff;
+  color: #d3afff;
+}
+
 /* Hover tooltip on status keywords */
 .tooltip-host {
   position: relative;
