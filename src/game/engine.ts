@@ -63,6 +63,8 @@ export function makeEnemyState(def: EnemyDef): EnemyState {
     curlUsed: false,
     hitsTaken: 0,
     spiteTriggered: false,
+    lastAttackValue: 0,
+    lastAttackHits: 0,
   };
 }
 
@@ -188,6 +190,12 @@ function applyDamageToEnemy(c: CombatState, enemy: EnemyState, raw: number) {
     enemy.hp = 0;
     enemy.alive = false;
     logMsg(c, `${enemy.def.name} 被击败。`);
+    // Spore Burst: dying enemy releases a curse cloud onto the player.
+    if (traits.includes("spore_burst")) {
+      const stacks = tune.sporeVuln ?? 2;
+      c.player.vulnerable += stacks;
+      logMsg(c, `${enemy.def.name} 孢子爆裂 — 易伤 +${stacks}。`);
+    }
   }
 }
 
@@ -678,13 +686,69 @@ export function endTurn(c: CombatState) {
       logMsg(c, `${e.def.name} 跳过此回合。`);
       continue;
     }
+    // Start-of-enemy-turn signature traits.
+    const traits = e.def.traits ?? [];
+    const tune = e.def.traitTune ?? {};
+    if (traits.includes("silicon_regen")) {
+      e.block += tune.siliconBlock ?? 4;
+    }
+    if (traits.includes("biomech_regen") && e.hp > 0) {
+      const heal = tune.regen ?? 3;
+      e.hp = Math.min(e.maxHp, e.hp + heal);
+      logMsg(c, `${e.def.name} 共生再生 — 治疗 ${heal} HP。`);
+    }
+    if (traits.includes("void_drain")) {
+      const drain = Math.min(tune.voidCharge ?? 1, c.player.charge);
+      if (drain > 0) {
+        c.player.charge -= drain;
+        logMsg(c, `${e.def.name} 虚空蚕食 — 抽走 ${drain} 充能。`);
+      }
+    }
+
+    // Capture this turn's attack value before resolving (for temporal_echo).
+    const it = e.intent;
+    if (it.kind === "attack") {
+      e.lastAttackValue = it.value ?? 0;
+      e.lastAttackHits = it.hits ?? 1;
+    }
     resolveEnemyIntent(c, e);
     if (c.over) return;
+
+    // End-of-enemy-turn: temporal echo replays the last attack at reduced %
+    if (
+      e.alive &&
+      traits.includes("temporal_echo") &&
+      e.lastAttackValue > 0
+    ) {
+      const mul = tune.echoMul ?? 0.5;
+      const replayDmg = Math.max(1, Math.floor(e.lastAttackValue * mul));
+      const hits = e.lastAttackHits || 1;
+      logMsg(c, `${e.def.name} 时序回放 — ${replayDmg} × ${hits}。`);
+      for (let i = 0; i < hits; i++) {
+        let dmg = replayDmg + e.strength;
+        if (e.weak > 0) dmg = Math.floor(dmg * 0.75);
+        applyDamageToPlayer(c, dmg);
+        if (c.over) return;
+      }
+    }
   }
 
   // === New player turn ===
   c.turn++;
   c.player.energy = c.player.maxEnergy;
+
+  // Runic Mark: alive enemies with this trait stack vulnerable on the player
+  // each player turn. Brutal if you don't kill the caster fast.
+  for (const e of c.enemies) {
+    if (!e.alive) continue;
+    const traits = e.def.traits ?? [];
+    const tune = e.def.traitTune ?? {};
+    if (traits.includes("runic_mark")) {
+      const stacks = tune.runicVuln ?? 1;
+      c.player.vulnerable += stacks;
+      logMsg(c, `${e.def.name} 符文标记 — 玩家易伤 +${stacks}。`);
+    }
+  }
 
   // Block clears unless metalized.
   if (!c.player.powers.find((p) => p.id === "metalize")) {

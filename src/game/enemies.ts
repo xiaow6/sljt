@@ -20,6 +20,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "孢子虫群",
     hp: 16,
     art: "enemies/spore_swarm.png",
+    traits: ["spore_burst"],
+    traitTune: { sporeVuln: 1 },
     pattern: (turn) => (turn % 2 === 0 ? atk(5) : atk(3, 2)),
   },
   biomech_drone: {
@@ -27,6 +29,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "生物机甲",
     hp: 22,
     art: "enemies/biomech_drone.png",
+    traits: ["biomech_regen"],
+    traitTune: { regen: 2 },
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0) return atk(8);
@@ -76,7 +80,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "装甲机甲",
     hp: 30,
     art: "enemies/biomech_drone.png",
-    traits: ["curl_up"],
+    traits: ["curl_up", "biomech_regen"],
+    traitTune: { regen: 2 },
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0) return blk(8);
@@ -130,8 +135,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "缄默使徒",
     hp: 22,
     art: "enemies/voidling.png",
-    traits: ["thorns"],
-    traitTune: { thorns: 2 },
+    traits: ["thorns", "void_drain"],
+    traitTune: { thorns: 2, voidCharge: 1 },
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0)
@@ -173,7 +178,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "生物泰坦",
     hp: 42,
     art: "enemies/bio_titan.png",
-    traits: ["spite"],
+    traits: ["spite", "biomech_regen"],
+    traitTune: { regen: 3 },
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0) return atk(11);
@@ -186,6 +192,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "孢子母巢",
     hp: 36,
     art: "enemies/swarm_queen.png",
+    traits: ["spore_burst"],
+    traitTune: { sporeVuln: 3 },
     pattern: (turn) => {
       const r = turn % 4;
       if (r === 0) return atk(9);
@@ -216,8 +224,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "虚空梦魇",
     hp: 38,
     art: "enemies/voidling.png",
-    traits: ["thorns", "phasing"],
-    traitTune: { thorns: 3 },
+    traits: ["thorns", "phasing", "void_drain"],
+    traitTune: { thorns: 3, voidCharge: 1 },
     pattern: (turn) => {
       const r = turn % 4;
       if (r === 0) return debuff("intent.void_horror.scream", 3);
@@ -231,6 +239,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "硅基辅祭",
     hp: 40,
     art: "enemies/runic_priest.png",
+    traits: ["silicon_regen"],
+    traitTune: { siliconBlock: 4 },
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0) return debuff("intent.priest.curse", 2);
@@ -278,6 +288,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "孢子始祖",
     hp: 56,
     art: "enemies/swarm_queen.png",
+    traits: ["spore_burst", "biomech_regen"],
+    traitTune: { sporeVuln: 4, regen: 4 },
     pattern: (turn) => {
       if (turn === 0) return buff("intent.swarm_alpha.brood");
       const r = turn % 4;
@@ -292,7 +304,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "虚空蛮兽",
     hp: 60,
     art: "enemies/bio_titan.png",
-    traits: ["spite"],
+    traits: ["spite", "void_drain"],
+    traitTune: { voidCharge: 1 },
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0) return atk(17);
@@ -329,6 +342,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "符文祭司",
     hp: 44,
     art: "enemies/runic_priest.png",
+    traits: ["runic_mark"],
+    traitTune: { runicVuln: 1 },
     pattern: (turn) => {
       const r = turn % 4;
       if (r === 0)
@@ -344,6 +359,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     hp: 70,
     isElite: true,
     art: "enemies/silicon_inquisitor.png",
+    traits: ["silicon_regen"],
+    traitTune: { siliconBlock: 6 },
     pattern: (turn) => {
       const r = turn % 4;
       if (r === 0) return atk(14);
@@ -357,6 +374,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "蚀时者",
     hp: 54,
     art: "enemies/time_eater.png",
+    traits: ["temporal_echo"],
+    traitTune: { echoMul: 0.5 },
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0) return atk(12);
@@ -370,6 +389,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "时序祭司",
     hp: 52,
     art: "enemies/runic_priest.png",
+    traits: ["temporal_echo", "runic_mark"],
+    traitTune: { echoMul: 0.5, runicVuln: 1 },
     pattern: (turn) => {
       if (turn === 0) return buff("intent.chrono_priest.foretell");
       const r = turn % 4;
@@ -400,6 +421,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     hp: 96,
     isElite: true,
     art: "enemies/silicon_inquisitor.png",
+    traits: ["temporal_echo", "silicon_regen"],
+    traitTune: { echoMul: 0.5, siliconBlock: 6 },
     pattern: (turn) => {
       if (turn === 0) return buff("intent.chrono_priest.foretell");
       const r = turn % 4;
@@ -414,6 +437,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "时序辅祭",
     hp: 50,
     art: "enemies/time_eater.png",
+    traits: ["temporal_echo"],
+    traitTune: { echoMul: 0.4 },
     pattern: (turn) => {
       const r = turn % 4;
       if (r === 0)
@@ -432,6 +457,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "符文使徒",
     hp: 58,
     art: "enemies/runic_priest.png",
+    traits: ["runic_mark", "silicon_regen"],
+    traitTune: { runicVuln: 1, siliconBlock: 5 },
     pattern: (turn) => {
       if (turn === 0) return buff("intent.chrono_priest.foretell");
       const r = turn % 4;

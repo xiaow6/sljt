@@ -1280,6 +1280,36 @@ button:disabled {
   border-color: #ba84ff;
   color: #d3afff;
 }
+.badge-trait-temporal_echo {
+  background: rgba(124, 200, 255, 0.14);
+  border-color: #7cc8ff;
+  color: #b6e0ff;
+}
+.badge-trait-silicon_regen {
+  background: rgba(165, 230, 220, 0.14);
+  border-color: #a5e6dc;
+  color: #c8eee9;
+}
+.badge-trait-biomech_regen {
+  background: rgba(120, 220, 130, 0.14);
+  border-color: #78dc82;
+  color: #a4ecaa;
+}
+.badge-trait-void_drain {
+  background: rgba(120, 80, 200, 0.14);
+  border-color: #7850c8;
+  color: #b39bff;
+}
+.badge-trait-spore_burst {
+  background: rgba(220, 230, 100, 0.14);
+  border-color: #dce664;
+  color: #ecf28c;
+}
+.badge-trait-runic_mark {
+  background: rgba(255, 180, 90, 0.14);
+  border-color: #ffb45a;
+  color: #ffd296;
+}
 
 /* Hover tooltip on status keywords */
 .tooltip-host {

@@ -64,12 +64,29 @@ export interface Intent {
 }
 
 // Per-enemy signature mechanics. See engine.ts for behavior.
-//   thorns    – attacker takes 2 dmg whenever this enemy is hit
-//   curl_up   – first time damaged, gains block
-//   hardened  – every incoming hit reduced by 3 (after vuln, before block)
-//   spite     – when HP first drops below 50%, permanently +2 strength
-//   phasing   – every 3rd hit deals 0 damage
-export type EnemyTrait = "thorns" | "curl_up" | "hardened" | "spite" | "phasing";
+//   thorns        – attacker takes 2 dmg whenever this enemy is hit
+//   curl_up       – first time damaged, gains block
+//   hardened      – every incoming hit reduced by 3 (after vuln, before block)
+//   spite         – when HP first drops below 50%, permanently +2 strength
+//   phasing       – every 3rd hit deals 0 damage
+//   temporal_echo – at end of its turn, replays its previous attack at 50%
+//   silicon_regen – at start of its turn, gains 4 block
+//   biomech_regen – at start of its turn, heals 3 HP
+//   void_drain    – at start of its turn, drains 1 charge from the player
+//   spore_burst   – on death, applies 2 vulnerable to the player
+//   runic_mark    – at start of player turn, applies 1 vulnerable
+export type EnemyTrait =
+  | "thorns"
+  | "curl_up"
+  | "hardened"
+  | "spite"
+  | "phasing"
+  | "temporal_echo"
+  | "silicon_regen"
+  | "biomech_regen"
+  | "void_drain"
+  | "spore_burst"
+  | "runic_mark";
 
 export interface EnemyDef {
   id: string;
@@ -80,8 +97,19 @@ export interface EnemyDef {
   isElite?: boolean;
   isBoss?: boolean;
   traits?: EnemyTrait[];
-  // Per-trait tuning (defaults: thorns 2 dmg, curl_up 6 block, hardened 3 dmg)
-  traitTune?: { thorns?: number; curlUp?: number; hardened?: number };
+  // Per-trait tuning (defaults: thorns 2, curlUp 6, hardened 3, regen 3,
+  // siliconBlock 4, sporeVuln 2, runicVuln 1, voidCharge 1, echoMul 0.5)
+  traitTune?: {
+    thorns?: number;
+    curlUp?: number;
+    hardened?: number;
+    regen?: number;
+    siliconBlock?: number;
+    sporeVuln?: number;
+    runicVuln?: number;
+    voidCharge?: number;
+    echoMul?: number;
+  };
 }
 
 export interface EnemyState {
@@ -101,6 +129,9 @@ export interface EnemyState {
   curlUsed: boolean;
   hitsTaken: number;
   spiteTriggered: boolean;
+  // Last attack values, for temporal_echo replay.
+  lastAttackValue: number;
+  lastAttackHits: number;
 }
 
 export interface DroneState {
