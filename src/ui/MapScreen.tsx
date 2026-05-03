@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { actions, useRun } from "../store";
 import { MenuModal } from "./MenuModal";
 import { useLang, t } from "../i18n";
@@ -64,12 +64,22 @@ export function MapScreen() {
     return cur ? cur.next.includes(n.id) : false;
   };
 
-  const NODE_W = 64;
-  const NODE_H = 64;
-  const COL_GAP = 80;
-  const ROW_GAP = 96;
-  const PAD_X = 32;
-  const PAD_Y = 32;
+  // Viewport-aware sizing — tighter constants on phones so all 6 columns fit.
+  const [isNarrow, setIsNarrow] = useState(
+    typeof window !== "undefined" && window.innerWidth < 700,
+  );
+  useEffect(() => {
+    const onResize = () => setIsNarrow(window.innerWidth < 700);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const NODE_W = isNarrow ? 44 : 64;
+  const NODE_H = isNarrow ? 44 : 64;
+  const COL_GAP = isNarrow ? 16 : 80;
+  const ROW_GAP = isNarrow ? 60 : 96;
+  const PAD_X = isNarrow ? 12 : 32;
+  const PAD_Y = isNarrow ? 24 : 32;
   const mapWidth = cols * NODE_W + (cols - 1) * COL_GAP + PAD_X * 2;
   const mapHeight = rows * NODE_H + (rows - 1) * ROW_GAP + PAD_Y * 2;
 
