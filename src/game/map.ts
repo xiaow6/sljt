@@ -122,23 +122,50 @@ export function getNode(map: MapNode[], id: string | null): MapNode | undefined 
   return map.find((n) => n.id === id);
 }
 
+// Depth-based difficulty: enemies at deeper rows hit harder & have more HP.
+// Bosses are pre-tuned so we leave them alone. Elites scale less aggressively
+// than smalls because they are already strong.
+function scaleEnemy(enemy: EnemyDef, row: number, totalRows: number): EnemyDef {
+  if (enemy.isBoss) return { ...enemy };
+  const depth = totalRows > 1 ? row / Math.max(1, totalRows - 1) : 0;
+  const mul = enemy.isElite ? 1 + depth * 0.15 : 1 + depth * 0.30;
+  if (mul <= 1.001) return { ...enemy };
+  const orig = enemy.pattern;
+  return {
+    ...enemy,
+    hp: Math.max(1, Math.round(enemy.hp * mul)),
+    pattern: (turn, rng) => {
+      const i = orig(turn, rng);
+      if ((i.kind === "attack" || i.kind === "block") && typeof i.value === "number") {
+        return { ...i, value: Math.max(1, Math.round(i.value * mul)) };
+      }
+      return i;
+    },
+  };
+}
+
 export function pickEncounter(node: MapNode): EnemyDef[] {
   const act = getAct(node.act);
-  if (node.type === "boss") return [{ ...ENEMIES[act.boss] }];
+  const totalRows = act.rows;
+  const scale = (e: EnemyDef) => scaleEnemy(e, node.row, totalRows);
+
+  if (node.type === "boss") return [scale({ ...ENEMIES[act.boss] })];
   if (node.type === "elite") {
     const id = act.elites[Math.floor(Math.random() * act.elites.length)];
-    return [{ ...ENEMIES[id] }];
+    return [scale({ ...ENEMIES[id] })];
   }
-  // normal battle
+  // normal battle — dual-encounter chance grows with depth
+  const depth = totalRows > 1 ? node.row / Math.max(1, totalRows - 1) : 0;
+  const dualChance = 0.3 + depth * 0.25; // 0.30 → 0.55
   const pool = act.smalls;
   const a = pool[Math.floor(Math.random() * pool.length)];
-  const dual = Math.random() < 0.4 && pool.length > 1;
+  const dual = Math.random() < dualChance && pool.length > 1;
   if (dual) {
     let b = pool[Math.floor(Math.random() * pool.length)];
     while (b === a) b = pool[Math.floor(Math.random() * pool.length)];
-    return [{ ...ENEMIES[a] }, { ...ENEMIES[b] }];
+    return [scale({ ...ENEMIES[a] }), scale({ ...ENEMIES[b] })];
   }
-  return [{ ...ENEMIES[a] }];
+  return [scale({ ...ENEMIES[a] })];
 }
 
 // Rarity weights per node tier.

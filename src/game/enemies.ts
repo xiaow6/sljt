@@ -67,6 +67,46 @@ export const ENEMIES: Record<string, EnemyDef> = {
       return atk(15);
     },
   },
+  // ----- Act 1 additions (reuse existing art) -----
+  armored_drone: {
+    id: "armored_drone",
+    name: "装甲机甲",
+    hp: 30,
+    art: "enemies/biomech_drone.png",
+    pattern: (turn) => {
+      const r = turn % 3;
+      if (r === 0) return blk(8);
+      if (r === 1) return atk(11);
+      return atk(5, 2);
+    },
+  },
+  void_stalker: {
+    id: "void_stalker",
+    name: "虚空潜行者",
+    hp: 24,
+    art: "enemies/voidling.png",
+    pattern: (turn) => {
+      const r = turn % 3;
+      if (r === 0) return atk(8);
+      if (r === 1) return debuff("intent.voidling.curse", 2);
+      return atk(4, 2);
+    },
+  },
+  awakened_sentinel: {
+    id: "awakened_sentinel",
+    name: "觉醒哨兵",
+    hp: 64,
+    isElite: true,
+    art: "enemies/dormant_sentinel.png",
+    pattern: (turn) => {
+      if (turn === 0) return buff("intent.charging");
+      const r = turn % 4;
+      if (r === 1) return atk(18);
+      if (r === 2) return atk(6, 2);
+      if (r === 3) return blk(12);
+      return atk(12);
+    },
+  },
   weaver: {
     id: "weaver",
     name: "织网者",
@@ -115,6 +155,60 @@ export const ENEMIES: Record<string, EnemyDef> = {
         return { kind: "debuff", value: 2, textKey: "intent.queen.spread" };
       if (r === 2) return atk(4, 3);
       return blk(8);
+    },
+  },
+  // ----- Act 2 additions -----
+  bio_brute: {
+    id: "bio_brute",
+    name: "生物巨兽",
+    hp: 52,
+    art: "enemies/bio_titan.png",
+    pattern: (turn) => {
+      if (turn === 0) return buff("intent.bio_brute.rage");
+      const r = turn % 3;
+      if (r === 0) return atk(13);
+      if (r === 1) return atk(6, 2);
+      return blk(8);
+    },
+  },
+  void_horror: {
+    id: "void_horror",
+    name: "虚空梦魇",
+    hp: 38,
+    art: "enemies/voidling.png",
+    pattern: (turn) => {
+      const r = turn % 4;
+      if (r === 0) return debuff("intent.void_horror.scream", 3);
+      if (r === 1) return atk(10);
+      if (r === 2) return atk(5, 2);
+      return blk(6);
+    },
+  },
+  silicon_acolyte: {
+    id: "silicon_acolyte",
+    name: "硅基辅祭",
+    hp: 40,
+    art: "enemies/runic_priest.png",
+    pattern: (turn) => {
+      const r = turn % 3;
+      if (r === 0) return debuff("intent.priest.curse", 2);
+      if (r === 1) return atk(9);
+      return atk(5, 2);
+    },
+  },
+  bio_warden: {
+    id: "bio_warden",
+    name: "生物近卫",
+    hp: 78,
+    isElite: true,
+    art: "enemies/bio_titan.png",
+    pattern: (turn) => {
+      if (turn === 0) return buff("intent.bio_brute.rage");
+      const r = turn % 4;
+      if (r === 1) return atk(16);
+      if (r === 2) return atk(7, 2);
+      if (r === 3) return blk(14);
+      return atk(11);
     },
   },
   gravity_warden: {
@@ -179,6 +273,49 @@ export const ENEMIES: Record<string, EnemyDef> = {
       if (r === 0) return atk(12);
       if (r === 1) return atk(5, 3);
       return { kind: "debuff", value: 2, textKey: "intent.timeEater.warp" };
+    },
+  },
+  // ----- Act 3 additions -----
+  chrono_priest: {
+    id: "chrono_priest",
+    name: "时序祭司",
+    hp: 52,
+    art: "enemies/runic_priest.png",
+    pattern: (turn) => {
+      if (turn === 0) return buff("intent.chrono_priest.foretell");
+      const r = turn % 4;
+      if (r === 1) return debuff("intent.priest.curse", 3);
+      if (r === 2) return atk(13);
+      if (r === 3) return atk(6, 3);
+      return blk(12);
+    },
+  },
+  void_warden: {
+    id: "void_warden",
+    name: "虚空守望者",
+    hp: 64,
+    art: "enemies/time_eater.png",
+    pattern: (turn) => {
+      const r = turn % 4;
+      if (r === 0) return atk(15);
+      if (r === 1) return atk(7, 2);
+      if (r === 2) return debuff("intent.timeEater.warp", 3);
+      return blk(14);
+    },
+  },
+  chrono_inquisitor: {
+    id: "chrono_inquisitor",
+    name: "时序审讯官",
+    hp: 96,
+    isElite: true,
+    art: "enemies/silicon_inquisitor.png",
+    pattern: (turn) => {
+      if (turn === 0) return buff("intent.chrono_priest.foretell");
+      const r = turn % 4;
+      if (r === 1) return atk(18);
+      if (r === 2) return atk(8, 3);
+      if (r === 3) return blk(18);
+      return atk(26);
     },
   },
   council_speaker: {

@@ -176,6 +176,9 @@ const zh: Record<string, string> = {
   "intent.heart.regen": "原初再生 (治疗 20)",
   "intent.heart.collapse": "时空崩塌 (易伤 3 + 虚弱 3)",
   "intent.heart.corruption": "源初腐化 (易伤 5)",
+  "intent.bio_brute.rage": "蛮怒生长 (力量 +2)",
+  "intent.void_horror.scream": "虚空尖啸 (易伤 3)",
+  "intent.chrono_priest.foretell": "时序预言 (力量 +2)",
 
   // Relics (label + description)
   "relic.quantum_battery.name": "量子电池",
@@ -382,6 +385,9 @@ const en: Record<string, string> = {
   "intent.heart.regen": "Primal Regen — heal 20",
   "intent.heart.collapse": "Spacetime Collapse — Vuln 3 + Weak 3",
   "intent.heart.corruption": "Primal Corruption — Vuln 5",
+  "intent.bio_brute.rage": "Feral Surge — Str +2",
+  "intent.void_horror.scream": "Void Scream — Vuln 3",
+  "intent.chrono_priest.foretell": "Foretell — Str +2",
 
   "relic.quantum_battery.name": "Quantum Battery",
   "relic.quantum_battery.desc": "Start each combat with 5 Charge.",

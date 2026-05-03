@@ -96,4 +96,76 @@ export const ENEMY_I18N: Record<string, EnemyI18n> = {
     loreEn:
       "The true core of the mothership. It has been beating for a billion years, waiting for someone who could hear.\n\nYou came.",
   },
+  // ----- Act 1 additions -----
+  armored_drone: {
+    nameEn: "Armored Drone",
+    lore:
+      "「机甲」的后期型号。装甲是从你舰队成员的舱门上熔下来的。",
+    loreEn:
+      "Late-pattern drone. Its plate was melted off the airlocks of your fleet.",
+  },
+  void_stalker: {
+    nameEn: "Void Stalker",
+    lore:
+      "虚空使徒的猎手亚种。它一直在你眼角的余光里——从你登舰那一刻起。",
+    loreEn:
+      "Hunter strain of the voidling. It has been in the corner of your eye since you boarded.",
+  },
+  awakened_sentinel: {
+    nameEn: "Awakened Sentinel",
+    lore:
+      "你的脚步声把它叫醒了。它现在很专注。",
+    loreEn: "Your footsteps woke it. It is paying attention now.",
+  },
+  // ----- Act 2 additions -----
+  bio_brute: {
+    nameEn: "Bio-Brute",
+    lore:
+      "生物泰坦的同源变体。骨骼长歪了,但更适合挥拳。",
+    loreEn:
+      "A divergent strain of the bio-titan. Bones grew crooked — better for throwing weight.",
+  },
+  void_horror: {
+    nameEn: "Void Horror",
+    lore:
+      "成熟体的虚空使徒。它会笑。",
+    loreEn:
+      "A matured voidling. It laughs.",
+  },
+  silicon_acolyte: {
+    nameEn: "Silicon Acolyte",
+    lore:
+      "硅基祭司的低阶辅祭。还在背诵不属于这个宇宙的语法。",
+    loreEn:
+      "Junior clergy of the silicon priesthood. Still memorising grammar from outside this universe.",
+  },
+  bio_warden: {
+    nameEn: "Bio-Warden",
+    lore:
+      "生物核心的近卫长。臂膀上还套着另一只生物的颅骨当护肩。",
+    loreEn:
+      "Honour-guard at the Bio-Core. Wears another creature's skull as a pauldron.",
+  },
+  // ----- Act 3 additions -----
+  chrono_priest: {
+    nameEn: "Chrono Priest",
+    lore:
+      "高阶时间祭司。它的话还没说出口,你就听见了。",
+    loreEn:
+      "Higher chronomancer. You hear its words before it has spoken them.",
+  },
+  void_warden: {
+    nameEn: "Void Warden",
+    lore:
+      "守在时间裂隙边上。它咀嚼小时。",
+    loreEn:
+      "Sentry at the edge of a temporal rift. It chews on hours.",
+  },
+  chrono_inquisitor: {
+    nameEn: "Chrono Inquisitor",
+    lore:
+      "审讯官的时序变体。它先得出判决,然后再开始审讯。",
+    loreEn:
+      "A temporal-class inquisitor. It returns the verdict first, then begins the questioning.",
+  },
 };
