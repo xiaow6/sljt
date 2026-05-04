@@ -249,12 +249,17 @@ function applyDamageToPlayer(c: CombatState, raw: number) {
 
   if (tookDamage) {
     c.player.hp -= remaining;
-    // phoenix_protocol: trigger when HP < 30% for first time.
-    const ph = c.player.powers.find((p) => p.id === "phoenix_protocol");
+    // phoenix_protocol: trigger when HP < 30% for first time. Upgraded copy
+    // is stored under the "_plus" id so we can heal more without needing a
+    // separate `upgraded` field on the power.
+    const ph = c.player.powers.find(
+      (p) => p.id === "phoenix_protocol" || p.id === "phoenix_protocol_plus",
+    );
     if (ph && !ph.value && c.player.hp > 0 && c.player.hp < c.player.maxHp * 0.3) {
-      ph.value = 1; // mark as triggered
-      selfHeal(c, 30);
-      logMsg(c, "凤凰协议触发: 治疗 30 HP。");
+      ph.value = 1;
+      const heal = ph.id === "phoenix_protocol_plus" ? 40 : 30;
+      selfHeal(c, heal);
+      logMsg(c, `凤凰协议触发: 治疗 ${heal} HP。`);
     }
     if (c.player.hp <= 0) {
       c.player.hp = 0;
@@ -269,8 +274,9 @@ function gainCharge(c: CombatState, n: number) {
   let amount = n;
   if (c.player.doubleChargeThisTurn) amount *= 2;
   c.player.charge += amount;
-  if (c.player.powers.find((p) => p.id === "tactical_ai")) {
-    c.player.block += amount;
+  const tai = c.player.powers.find((p) => p.id === "tactical_ai");
+  if (tai) {
+    c.player.block += amount * (tai.value === 1 ? 2 : 1);
   }
 }
 
@@ -447,14 +453,17 @@ function resolveEffects(
 
   switch (eff.custom) {
     case "reactor_overclock":
-      c.player.powers.push({ id: "reactor_overclock" });
+      c.player.powers.push({
+        id: "reactor_overclock",
+        value: card.upgraded ? 1 : 0,
+      });
       logMsg(c, "反应堆超频上线。");
       break;
     case "tactical_ai":
-      c.player.powers.push({ id: "tactical_ai" });
+      c.player.powers.push({ id: "tactical_ai", value: card.upgraded ? 1 : 0 });
       break;
     case "nano_repair":
-      c.player.powers.push({ id: "nano_repair" });
+      c.player.powers.push({ id: "nano_repair", value: card.upgraded ? 1 : 0 });
       break;
     case "metalize":
       c.player.powers.push({ id: "metalize" });
@@ -487,10 +496,18 @@ function resolveEffects(
       c.player.powers.push({ id: "virus_deploy" });
       break;
     case "nuclear_meltdown":
-      c.player.powers.push({ id: "nuclear_meltdown" });
+      c.player.powers.push({
+        id: "nuclear_meltdown",
+        value: card.upgraded ? 1 : 0,
+      });
       break;
     case "phoenix_protocol":
-      c.player.powers.push({ id: "phoenix_protocol", value: 0 });
+      // value:0 = not yet triggered. Upgraded copy stores +10 heal in a
+      // separate field via the power id check at proc time (see endTurn).
+      c.player.powers.push({
+        id: card.upgraded ? "phoenix_protocol_plus" : "phoenix_protocol",
+        value: 0,
+      });
       break;
 
     case "data_scan": {
@@ -526,41 +543,49 @@ function resolveEffects(
       break;
     }
     case "overload_discharge": {
-      // Consume 5 charge for 16 AOE. If insufficient, do half.
       const cost = 5;
+      const dmg = card.upgraded ? 20 : 16;
+      const halfDmg = card.upgraded ? 10 : 8;
       if (c.player.charge >= cost) {
         c.player.charge -= cost;
-        for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, 16);
-        logMsg(c, `过载放电: 16 AOE。`);
+        for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, dmg);
+        logMsg(c, `过载放电: ${dmg} AOE。`);
       } else {
-        for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, 8);
-        logMsg(c, `过载放电(能量不足): 8 AOE。`);
+        for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, halfDmg);
+        logMsg(c, `过载放电(能量不足): ${halfDmg} AOE。`);
       }
       break;
     }
     case "bounce_field":
       c.player.bounceFieldActive = true;
       break;
-    case "magnetic_storm":
-      for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, 4);
+    case "magnetic_storm": {
+      const dmg = card.upgraded ? 6 : 4;
+      for (const e of aliveEnemies(c)) applyDamageToEnemy(c, e, dmg);
       break;
+    }
     case "field_charge":
-      c.player.pendingNextTurnBlock += 8;
+      c.player.pendingNextTurnBlock += card.upgraded ? 12 : 8;
       break;
     case "deflection_strike": {
       if (!target) break;
-      attackEnemy(c, target, c.player.block);
+      const mul = card.upgraded ? 1.5 : 1;
+      attackEnemy(c, target, Math.floor(c.player.block * mul));
       break;
     }
     case "overcharge_shield":
       c.player.doubleChargeThisTurn = true;
       break;
-    case "iron_wall":
-      c.player.block += c.player.block >= 10 ? 6 : 3;
+    case "iron_wall": {
+      const big = card.upgraded ? 8 : 6;
+      const small = card.upgraded ? 5 : 3;
+      c.player.block += c.player.block >= 10 ? big : small;
       break;
+    }
     case "absolute_zero": {
       if (!target) break;
-      if (c.player.block >= 20) attackEnemy(c, target, 28);
+      const dmg = card.upgraded ? 38 : 28;
+      if (c.player.block >= 20) attackEnemy(c, target, dmg);
       break;
     }
 
@@ -687,9 +712,8 @@ export function endTurn(c: CombatState) {
   if (c.player.powers.find((p) => p.id === "virus_deploy")) {
     for (const e of c.enemies) if (e.alive) applyHack(c, e, 1);
   }
-  if (c.player.powers.find((p) => p.id === "nano_repair")) {
-    selfHeal(c, 2);
-  }
+  const nr = c.player.powers.find((p) => p.id === "nano_repair");
+  if (nr) selfHeal(c, nr.value === 1 ? 3 : 2);
 
   if (c.player.vulnerable > 0) c.player.vulnerable--;
   if (c.player.weak > 0) c.player.weak--;
@@ -782,14 +806,16 @@ export function endTurn(c: CombatState) {
     c.player.pendingNextTurnBlock = 0;
   }
 
-  // Reactor overclock — start of turn +3 charge, -2 HP (rebalanced)
-  if (c.player.powers.find((p) => p.id === "reactor_overclock")) {
-    gainCharge(c, 3);
+  // Reactor overclock — start of turn +3 charge, -2 HP. Upgraded → +4 charge.
+  const rov = c.player.powers.find((p) => p.id === "reactor_overclock");
+  if (rov) {
+    gainCharge(c, rov.value === 1 ? 4 : 3);
     const relics = (c as CombatState & { relics?: string[] }).relics ?? [];
     if (!relics.includes("overload_buffer")) selfHpCost(c, 2);
   }
-  if (c.player.powers.find((p) => p.id === "nuclear_meltdown")) {
-    gainCharge(c, 4);
+  const nm = c.player.powers.find((p) => p.id === "nuclear_meltdown");
+  if (nm) {
+    gainCharge(c, nm.value === 1 ? 5 : 4);
     const relics = (c as CombatState & { relics?: string[] }).relics ?? [];
     if (!relics.includes("overload_buffer")) selfHpCost(c, 3);
   }

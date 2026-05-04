@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { actions, useRun } from "../store";
 import { CardView } from "./CardView";
+import { previewUpgrade } from "../game/lookup";
 import { t, useLang } from "../i18n";
 
 type Mode = "browse" | "upgrade" | "remove";
@@ -87,10 +88,12 @@ export function ShopScreen() {
             <div className="shop-deck-grid">
               {run.deck.map((card, i) => {
                 const disabled = mode === "upgrade" && !!card.upgraded;
+                const showPreview = mode === "upgrade" && !card.upgraded;
+                const preview = showPreview ? previewUpgrade(card) : null;
                 return (
                   <button
                     key={i}
-                    className="rest-card-pick"
+                    className="rest-card-pick rest-card-preview"
                     disabled={disabled}
                     onClick={() => {
                       if (mode === "upgrade") actions.shopUpgradeCard(i);
@@ -98,7 +101,15 @@ export function ShopScreen() {
                       setMode("browse");
                     }}
                   >
-                    <CardView card={card} />
+                    <div className="upgrade-preview-pair">
+                      <CardView card={card} />
+                      {preview && (
+                        <>
+                          <span className="upgrade-arrow">→</span>
+                          <CardView card={preview} />
+                        </>
+                      )}
+                    </div>
                     {disabled && (
                       <div className="rest-upgraded-badge">{t("rest.upgraded")}</div>
                     )}

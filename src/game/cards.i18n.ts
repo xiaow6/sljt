@@ -214,7 +214,7 @@ export const CARD_I18N: Record<string, CardI18n> = {
   },
   field_charge: {
     nameEn: "Field Charge",
-    descriptionEn: "At the start of next turn, gain 10 Block.",
+    descriptionEn: "At the start of next turn, gain 8 Block.",
     lore:
       "把力场充电棒插进腰间的接口。下一次心跳,装甲会回应。",
     loreEn:
@@ -245,7 +245,7 @@ export const CARD_I18N: Record<string, CardI18n> = {
   },
   iron_wall: {
     nameEn: "Iron Wall",
-    descriptionEn: "Gain 5 Block. If you already have ≥ 10 Block, gain 10 instead.",
+    descriptionEn: "Gain 3 Block. If you already have ≥ 10 Block, gain 6 instead.",
     lore:
       "「越厚的墙越好砸开。可你不是先驱者。你只想活到下一回合。」",
     loreEn:

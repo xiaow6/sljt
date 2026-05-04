@@ -2685,3 +2685,39 @@ button:disabled {
 @media (max-width: 700px) {
   .player-slash-value { font-size: 28px; }
 }
+
+/* ====== Upgrade preview pair (rest + shop pickers) ====== */
+.rest-card-preview {
+  background: transparent;
+  border: 1px dashed var(--line);
+  padding: 12px;
+  border-radius: 8px;
+}
+.rest-card-preview:hover:not(:disabled) {
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(75, 230, 234, 0.25);
+}
+.upgrade-preview-pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+.upgrade-arrow {
+  font-size: 24px;
+  color: var(--cyan);
+  text-shadow: 0 0 8px var(--cyan-dim);
+  font-weight: 600;
+  flex: 0 0 auto;
+}
+@media (max-width: 700px) {
+  .upgrade-preview-pair {
+    gap: 4px;
+  }
+  .upgrade-arrow {
+    font-size: 18px;
+  }
+  .rest-card-preview {
+    padding: 6px;
+  }
+}

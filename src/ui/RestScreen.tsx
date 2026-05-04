@@ -1,5 +1,6 @@
 import { actions, useRun } from "../store";
 import { CardView } from "./CardView";
+import { previewUpgrade } from "../game/lookup";
 import { t, useLang } from "../i18n";
 
 export function RestScreen() {
@@ -18,19 +19,31 @@ export function RestScreen() {
             </button>
           </div>
           <div className="rest-upgrade-grid">
-            {run.deck.map((card, i) => (
-              <button
-                key={i}
-                className="rest-card-pick"
-                disabled={!!card.upgraded}
-                onClick={() => actions.restUpgradeCard(i)}
-              >
-                <CardView card={card} />
-                {card.upgraded && (
-                  <div className="rest-upgraded-badge">{t("rest.upgraded")}</div>
-                )}
-              </button>
-            ))}
+            {run.deck.map((card, i) => {
+              const upgraded = !!card.upgraded;
+              const preview = upgraded ? null : previewUpgrade(card);
+              return (
+                <button
+                  key={i}
+                  className="rest-card-pick rest-card-preview"
+                  disabled={upgraded}
+                  onClick={() => actions.restUpgradeCard(i)}
+                >
+                  <div className="upgrade-preview-pair">
+                    <CardView card={card} />
+                    {preview && (
+                      <>
+                        <span className="upgrade-arrow">→</span>
+                        <CardView card={preview} />
+                      </>
+                    )}
+                  </div>
+                  {upgraded && (
+                    <div className="rest-upgraded-badge">{t("rest.upgraded")}</div>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
