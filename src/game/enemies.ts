@@ -15,27 +15,26 @@ const debuff = (textKey: string, value?: number): Intent => ({
 
 export const ENEMIES: Record<string, EnemyDef> = {
   // ===== Act 1 =====
+  // Act 1 baseline: low HP, no traits, simple patterns. The job is to teach
+  // the player the basic loop (hit / block / end turn) — everything mean and
+  // bursty has been moved into Act 2.
   spore_swarm: {
     id: "spore_swarm",
     name: "孢子虫群",
-    hp: 16,
+    hp: 14,
     art: "enemies/spore_swarm.png",
-    traits: ["spore_burst"],
-    traitTune: { sporeVuln: 1 },
-    pattern: (turn) => (turn % 2 === 0 ? atk(5) : atk(3, 2)),
+    pattern: (turn) => (turn % 2 === 0 ? atk(4) : atk(2, 2)),
   },
   biomech_drone: {
     id: "biomech_drone",
     name: "生物机甲",
-    hp: 22,
+    hp: 20,
     art: "enemies/biomech_drone.png",
-    traits: ["biomech_regen"],
-    traitTune: { regen: 2 },
     pattern: (turn) => {
       const r = turn % 3;
-      if (r === 0) return atk(8);
-      if (r === 1) return blk(6);
-      return atk(4, 2);
+      if (r === 0) return atk(7);
+      if (r === 1) return blk(5);
+      return atk(3, 2);
     },
   },
   dormant_sentinel: {
@@ -54,11 +53,10 @@ export const ENEMIES: Record<string, EnemyDef> = {
   voidling: {
     id: "voidling",
     name: "虚空使徒",
-    hp: 20,
+    hp: 18,
     art: "enemies/voidling.png",
-    traits: ["phasing"],
     pattern: (turn) =>
-      turn % 3 === 0 ? debuff("intent.voidling.curse", 2) : atk(7),
+      turn % 3 === 0 ? debuff("intent.voidling.curse", 2) : atk(6),
   },
   evolved: {
     id: "evolved",
@@ -80,12 +78,11 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "装甲机甲",
     hp: 30,
     art: "enemies/biomech_drone.png",
-    traits: ["curl_up", "biomech_regen"],
-    traitTune: { regen: 2 },
+    traits: ["curl_up"],
     pattern: (turn) => {
       const r = turn % 3;
-      if (r === 0) return blk(8);
-      if (r === 1) return atk(11);
+      if (r === 0) return blk(7);
+      if (r === 1) return atk(10);
       return atk(5, 2);
     },
   },
@@ -122,12 +119,12 @@ export const ENEMIES: Record<string, EnemyDef> = {
   pulse_drone: {
     id: "pulse_drone",
     name: "脉冲机甲",
-    hp: 28,
+    hp: 24,
     art: "enemies/biomech_drone.png",
     pattern: (turn) => {
       if (turn % 3 === 0) return buff("intent.pulse_drone.charge");
-      if (turn % 3 === 1) return atk(12);
-      return atk(4, 2);
+      if (turn % 3 === 1) return atk(10);
+      return atk(3, 2);
     },
   },
   silent_voidling: {
@@ -135,8 +132,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "缄默使徒",
     hp: 22,
     art: "enemies/voidling.png",
-    traits: ["thorns", "void_drain"],
-    traitTune: { thorns: 2, voidCharge: 1 },
+    traits: ["thorns"],
+    traitTune: { thorns: 2 },
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0)
@@ -178,8 +175,7 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "生物泰坦",
     hp: 42,
     art: "enemies/bio_titan.png",
-    traits: ["spite", "biomech_regen"],
-    traitTune: { regen: 3 },
+    traits: ["spite"],
     pattern: (turn) => {
       const r = turn % 3;
       if (r === 0) return atk(11);
@@ -224,8 +220,8 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: "虚空梦魇",
     hp: 38,
     art: "enemies/voidling.png",
-    traits: ["thorns", "phasing", "void_drain"],
-    traitTune: { thorns: 3, voidCharge: 1 },
+    traits: ["thorns", "phasing"],
+    traitTune: { thorns: 3 },
     pattern: (turn) => {
       const r = turn % 4;
       if (r === 0) return debuff("intent.void_horror.scream", 3);

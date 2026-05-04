@@ -125,15 +125,16 @@ export function getNode(map: MapNode[], id: string | null): MapNode | undefined 
 // Difficulty: HP & atk/blk values multiplied by (act baseline) × (within-act
 // depth ramp). Bosses are pre-tuned and skip scaling. Elites ramp slower.
 //
-// Smalls in Act 1 row 0  → 1.00× (baseline)
-// Smalls in Act 1 boss row → 1.55×  (1.0 × 1.55)
-// Smalls in Act 3 row 0  → 1.30×
-// Smalls in Act 3 boss row → 2.02×  (1.30 × 1.55)
+// Tuning targets (gentler curve):
+//   Smalls Act 1 row 0  → 1.00× (baseline)
+//   Smalls Act 1 boss row → 1.30× (1.00 × 1.30)
+//   Smalls Act 3 row 0  → 1.20×
+//   Smalls Act 3 boss row → 1.56× (1.20 × 1.30)
 function scaleEnemy(enemy: EnemyDef, act: number, row: number, totalRows: number): EnemyDef {
   if (enemy.isBoss) return { ...enemy };
   const depth = totalRows > 1 ? row / Math.max(1, totalRows - 1) : 0;
-  const depthMul = enemy.isElite ? 1 + depth * 0.30 : 1 + depth * 0.55;
-  const actMul = 1 + (act - 1) * 0.15; // 1.00 / 1.15 / 1.30
+  const depthMul = enemy.isElite ? 1 + depth * 0.20 : 1 + depth * 0.30;
+  const actMul = 1 + (act - 1) * 0.10; // 1.00 / 1.10 / 1.20
   const mul = depthMul * actMul;
   if (mul <= 1.001) return { ...enemy };
   const orig = enemy.pattern;
@@ -160,11 +161,15 @@ export function pickEncounter(node: MapNode): EnemyDef[] {
     const id = act.elites[Math.floor(Math.random() * act.elites.length)];
     return [scale({ ...ENEMIES[id] })];
   }
-  // Normal battle. Higher depth & higher act → more dual / triple encounters.
+  // Normal battle. Encounter sizing now ramps gently.
+  // dualChance:   Act 1 row 0 → 0.15  ·  Act 3 boss row → 0.55
+  // tripleChance: Act 2 deep  → ~0.13 ·  Act 3 deep     → ~0.16
   const depth = totalRows > 1 ? node.row / Math.max(1, totalRows - 1) : 0;
-  const dualChance = 0.35 + depth * 0.35 + (node.act - 1) * 0.05;
+  const dualChance = 0.15 + depth * 0.25 + (node.act - 1) * 0.10;
   const tripleChance =
-    node.act >= 2 && depth > 0.5 ? (depth - 0.5) * 0.4 + (node.act - 2) * 0.05 : 0;
+    node.act >= 2 && depth > 0.5
+      ? (depth - 0.5) * 0.25 + (node.act - 2) * 0.03
+      : 0;
   const pool = act.smalls;
   const pick = () => pool[Math.floor(Math.random() * pool.length)];
   const a = pick();
