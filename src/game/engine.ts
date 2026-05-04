@@ -656,6 +656,9 @@ function runDroneActions(c: CombatState, multiplier = 1) {
       drawCards(c, 1 * m);
     }
   }
+  // A combat drone that kills the last enemy must end the fight; otherwise
+  // the player is stuck with no live targets but no victory transition.
+  checkVictory(c);
 }
 
 export function endTurn(c: CombatState) {
