@@ -112,6 +112,10 @@ export function BattleScreen() {
       }|${c.enemies.map((e) => e.block).join(",")}|${c.turn}`
     : "";
   const [lungeKey, setLungeKey] = useState(0);
+  // Slash overlay on the player portrait when an enemy attack lands HP damage.
+  // Each hit bumps the key so the CSS animation restarts; the value drives
+  // the big bold number rendered inside the slash.
+  const [slash, setSlash] = useState<{ key: number; value: number } | null>(null);
 
   useEffect(() => {
     if (!c) return;
@@ -177,8 +181,15 @@ export function BattleScreen() {
       setTimeout(() => {
         setFloaters((cur) => cur.filter((f) => !ids.includes(f.id)));
       }, 1400);
-      if (next.some((f) => f.target === "player" && f.kind === "damage")) {
+      const playerHitFloater = next.find(
+        (f) => f.target === "player" && f.kind === "damage",
+      );
+      if (playerHitFloater) {
         setFlashKey((k) => k + 1);
+        setSlash((s) => ({
+          key: (s?.key ?? 0) + 1,
+          value: playerHitFloater.value,
+        }));
       }
     }
 
@@ -385,6 +396,13 @@ export function BattleScreen() {
             className={`player-portrait ${shaking.has("player") ? "shake" : ""}`}
           >
             <PortraitImg />
+            {slash && (
+              <div key={slash.key} className="player-slash">
+                <span className="player-slash-streak player-slash-streak-1" />
+                <span className="player-slash-streak player-slash-streak-2" />
+                <span className="player-slash-value">−{slash.value}</span>
+              </div>
+            )}
             {floaters
               .filter((f) => f.target === "player")
               .map((f) => (
