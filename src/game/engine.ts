@@ -373,6 +373,19 @@ export function playCard(
   const res = canPlay(c, card, targetIdx, xValue);
   if (!res.ok) return res;
 
+  // Power-card duplicate guard: powers don't stack in this engine — playing
+  // a second copy of an already-active power would just waste energy. Auto-
+  // exhaust the duplicate at zero cost and skip the effect.
+  if (card.type === "power" && card.effect.custom) {
+    const powerId = card.effect.custom;
+    if (c.player.powers.find((p) => p.id === powerId)) {
+      c.hand.splice(cardIndex, 1);
+      c.exhaust.push(card);
+      logMsg(c, `${card.name} 已激活,自动消耗。`);
+      return { ok: true };
+    }
+  }
+
   let effectiveCost = card.cost === "X" ? (xValue ?? 0) : card.cost;
   if (
     c.player.nextSummonDiscount &&
@@ -393,8 +406,11 @@ export function playCard(
     gainData(c, 1);
   }
 
+  // Powers are exhaust-on-play: once cast, the power is active for the rest
+  // of the combat and the card itself goes to the exhaust pile (visible in
+  // the UI counter). Source of truth for the *next* combat is run.deck.
   if (card.type === "power") {
-    // stays in powers
+    c.exhaust.push(card);
   } else if (card.exhaust) {
     c.exhaust.push(card);
   } else {
